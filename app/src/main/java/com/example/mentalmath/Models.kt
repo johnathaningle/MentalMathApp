@@ -30,6 +30,7 @@ enum class QuestionType(val label: String) {
 data class DifficultyConfig(
     val basicNumbers: IntRange = 1..20,
     val compoundNumbers: IntRange = 1..20,
+    val smallNumbers: IntRange = 2..12,
     val operators: List<Operator> = listOf(Operator.ADDITION, Operator.SUBTRACTION),
     val questionTypes: List<QuestionType> = listOf(QuestionType.BASIC),
     val timeLimitSeconds: Int = 90,
