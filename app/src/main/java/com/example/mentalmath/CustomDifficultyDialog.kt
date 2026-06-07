@@ -2,6 +2,7 @@ package com.example.mentalmath
 
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
@@ -20,6 +21,8 @@ class CustomDifficultyDialog : DialogFragment() {
         binding.etMaxNumber.setText(config.basicNumbers.last.toString())
         binding.etCompoundMin.setText(config.compoundNumbers.first.toString())
         binding.etCompoundMax.setText(config.compoundNumbers.last.toString())
+        binding.etSmallMin.setText(config.smallNumbers.first.toString())
+        binding.etSmallMax.setText(config.smallNumbers.last.toString())
         binding.etTimeLimit.setText(config.timeLimitSeconds.toString())
         binding.etLives.setText(config.lives.toString())
 
@@ -37,12 +40,32 @@ class CustomDifficultyDialog : DialogFragment() {
             .setTitle("Custom Difficulty")
             .setView(binding.root)
             .setPositiveButton("Start") { _, _ ->
-                val basicMin = binding.etMinNumber.text.toString().toIntOrNull() ?: 1
-                val basicMax = binding.etMaxNumber.text.toString().toIntOrNull() ?: 20
-                val compMin = binding.etCompoundMin.text.toString().toIntOrNull() ?: 1
-                val compMax = binding.etCompoundMax.text.toString().toIntOrNull() ?: 20
-                val timeLimit = binding.etTimeLimit.text.toString().toIntOrNull() ?: 60
-                val lives = binding.etLives.text.toString().toIntOrNull() ?: 3
+                val basicMin = binding.etMinNumber.text.toString().toIntOrNull()
+                val basicMax = binding.etMaxNumber.text.toString().toIntOrNull()
+                val compMin = binding.etCompoundMin.text.toString().toIntOrNull()
+                val compMax = binding.etCompoundMax.text.toString().toIntOrNull()
+                val smallMin = binding.etSmallMin.text.toString().toIntOrNull()
+                val smallMax = binding.etSmallMax.text.toString().toIntOrNull()
+                val timeLimit = binding.etTimeLimit.text.toString().toIntOrNull()
+                val lives = binding.etLives.text.toString().toIntOrNull()
+
+                if (basicMin == null || basicMax == null || compMin == null ||
+                    compMax == null || smallMin == null || smallMax == null ||
+                    timeLimit == null || lives == null
+                ) {
+                    Toast.makeText(requireContext(), "Please fill in all fields with valid numbers", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                if (basicMin < 1 || compMin < 1 || smallMin < 2) {
+                    Toast.makeText(requireContext(), "Minimum values must be at least 1 (2 for small numbers)", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                if (basicMax < basicMin || compMax < compMin || smallMax < smallMin) {
+                    Toast.makeText(requireContext(), "Max must be greater than or equal to Min", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
 
                 val operators = mutableListOf<Operator>()
                 if (binding.cbAddition.isChecked) operators.add(Operator.ADDITION)
@@ -59,8 +82,9 @@ class CustomDifficultyDialog : DialogFragment() {
                 if (questionTypes.isEmpty()) questionTypes.add(QuestionType.BASIC)
 
                 GameManager.config = DifficultyConfig(
-                    basicNumbers = basicMin.coerceAtLeast(1)..basicMax.coerceAtLeast(basicMin),
-                    compoundNumbers = compMin.coerceAtLeast(1)..compMax.coerceAtLeast(compMin),
+                    basicNumbers = basicMin..basicMax,
+                    compoundNumbers = compMin..compMax,
+                    smallNumbers = smallMin..smallMax,
                     operators = operators,
                     questionTypes = questionTypes,
                     timeLimitSeconds = timeLimit.coerceAtLeast(10),

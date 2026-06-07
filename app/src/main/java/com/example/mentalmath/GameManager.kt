@@ -18,9 +18,8 @@ object GameManager {
     private var currentQ: Question? = null
 
     fun startGame() {
-        config = getDefaultConfig(difficulty)
-        if (difficulty == Difficulty.CUSTOM) {
-            config = getDefaultConfig(Difficulty.EASY)
+        if (difficulty != Difficulty.CUSTOM) {
+            config = getDefaultConfig(difficulty)
         }
         score = 0
         streak = 0
@@ -86,7 +85,7 @@ object GameManager {
 
     private fun basicInt(): Int = config.basicNumbers.random()
     private fun compInt(): Int = config.compoundNumbers.random()
-    private fun smallInt(): Int = (2..12).random()
+    private fun smallInt(): Int = config.smallNumbers.random()
     private fun pickOp(): Operator = config.operators.random()
 
     // ---- BASIC ----
@@ -107,7 +106,7 @@ object GameManager {
                 Question("$a \u00d7 $b", a * b)
             }
             Operator.DIVISION -> {
-                val b = smallInt(); val q = smallInt(); val a = b * q
+                val b = smallInt(); val q = basicInt(); val a = b * q
                 Question("$a \u00f7 $b", q)
             }
         }
@@ -186,27 +185,25 @@ object GameManager {
                 val e = (1..(ab + cd)).random()
                 Question("$a \u00d7 $b + $c \u00d7 $d \u2212 $e", ab + cd - e)
             },
-            // a + b × c - d ÷ e  (× and ÷ first)
+            // a + b × c - d ÷ e
             {
                 val b = smallInt(); val c = smallInt(); val bc = b * c
-                val e = smallInt(); val q = smallInt(); val d = e * q
+                val e = smallInt()
                 val a = compInt()
-                val answer = a + bc - q
-                val (adjustedA, adjustedQ) = if (answer < 0) {
-                    val shift = (-answer) + 10
-                    Pair(a, q + shift / e)
-                } else Pair(a, q)
-                val ad = e * adjustedQ
-                val adjAns = a + bc - adjustedQ
-                Question("$a + $b \u00d7 $c \u2212 $ad \u00f7 $e", adjAns)
+                val maxQ = a + bc
+                val q = (2..minOf(12, maxQ.coerceAtLeast(2))).random()
+                val d = e * q
+                Question("$a + $b \u00d7 $c \u2212 $d \u00f7 $e", a + bc - q)
             },
             // a × b - c ÷ d + e
             {
                 val a = smallInt(); val b = smallInt(); val prod = a * b
-                val d = smallInt(); val q = smallInt(); val c = d * q
+                val d = smallInt()
                 val e = compInt()
-                val answer = prod - q + e
-                Question("$a \u00d7 $b \u2212 $c \u00f7 $d + $e", answer)
+                val maxQ = prod + e
+                val q = (2..minOf(12, maxQ.coerceAtLeast(2))).random()
+                val c = d * q
+                Question("$a \u00d7 $b \u2212 $c \u00f7 $d + $e", prod - q + e)
             },
             // a ÷ b × c + d - e
             {
@@ -218,31 +215,26 @@ object GameManager {
             },
             // a + b - c × d ÷ e
             {
-                val c = smallInt(); val d = smallInt(); val cd = c * d
-                val e = smallInt(); val q = cd / e; val rem = cd % e
-                val adjustedC = if (rem != 0) {
-                    (cd / e + 1) * e / d
-                } else c
-                val finalCd = adjustedC * d
-                val finalQ = finalCd / e
-                val a = compInt(); val b = (1..a).random()
-                val answer = a - b - finalQ
-                val (adjA, adjB) = if (answer < 0) {
-                    val extra = (-answer) + 10
-                    Pair(a + extra, b)
-                } else Pair(a, b)
-                val adjAns = adjA - adjB - finalQ
-                Question("$adjA \u2212 $adjB \u2212 $adjustedC \u00d7 $d \u00f7 $e", adjAns)
+                val a = compInt(); val b = compInt(); val total = a + b
+                val e = smallInt()
+                val maxQ = minOf(12, total)
+                val q = (2..maxQ.coerceAtLeast(2)).random()
+                val cd = q * e
+                val factors = (2..12).filter { cd % it == 0 && cd / it in 2..12 }
+                val c = factors.random()
+                val d = cd / c
+                Question("$a + $b \u2212 $c \u00d7 $d \u00f7 $e", total - q)
             },
             // a × b + c - d × e
             {
                 val a = smallInt(); val b = smallInt(); val ab = a * b
-                val d = smallInt(); val e = smallInt(); val de = d * e
-                val c = compInt()
-                val answer = ab + c - de
-                val adjC = if (answer < 0) c + (-answer) + 10 else c
-                val adjAns = ab + adjC - de
-                Question("$a \u00d7 $b + $adjC \u2212 $d \u00d7 $e", adjAns)
+                val d = smallInt()
+                val maxE = minOf(12, (ab + 30) / d)
+                val e = (2..maxE.coerceAtLeast(2)).random()
+                val de = d * e
+                val minC = (de - ab).coerceAtLeast(1)
+                val c = (minC..maxOf(minC, 30)).random()
+                Question("$a \u00d7 $b + $c \u2212 $d \u00d7 $e", ab + c - de)
             }
         )
         return patterns.random()()

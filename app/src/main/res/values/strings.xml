@@ -59,4 +59,5 @@
     <string name="percentage_questions">Percentages (e.g. 20% of 50)</string>
     <string name="basic_number_range">Basic Number Range</string>
     <string name="compound_number_range">Compound Number Range</string>
+    <string name="small_number_range">Small Number Range (×, ÷ operands)</string>
 </resources>
