@@ -22,7 +22,7 @@ android {
         val releaseStoreFile = project.findProperty("RELEASE_STORE_FILE") as? String
         if (!releaseStoreFile.isNullOrEmpty()) {
             create("release") {
-                storeFile = file(releaseStoreFile)
+                storeFile = rootProject.file(releaseStoreFile)
                 storePassword = project.findProperty("RELEASE_STORE_PASSWORD") as? String ?: ""
                 keyAlias = project.findProperty("RELEASE_KEY_ALIAS") as? String ?: ""
                 keyPassword = project.findProperty("RELEASE_KEY_PASSWORD") as? String ?: ""
