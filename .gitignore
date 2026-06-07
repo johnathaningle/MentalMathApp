@@ -10,3 +10,12 @@
 *.apk
 *.aab
 *.ap_
+
+# Signing
+*.keystore
+*.jks
+*.jceks
+*.p12
+*.pfx
+signing.properties
+local.gradle
