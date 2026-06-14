@@ -19,3 +19,4 @@
 *.pfx
 signing.properties
 local.gradle
+.kotlin
