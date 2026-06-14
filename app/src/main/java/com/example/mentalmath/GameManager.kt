@@ -99,15 +99,15 @@ object GameManager {
             }
             Operator.SUBTRACTION -> {
                 val a = basicInt(); val b = (config.basicNumbers.first..a).random()
-                Question("$a \u2212 $b", a - b)
+                Question("$a − $b", a - b)
             }
             Operator.MULTIPLICATION -> {
                 val a = smallInt(); val b = smallInt()
-                Question("$a \u00d7 $b", a * b)
+                Question("$a × $b", a * b)
             }
             Operator.DIVISION -> {
                 val b = smallInt(); val q = basicInt(); val a = b * q
-                Question("$a \u00f7 $b", q)
+                Question("$a ÷ $b", q)
             }
         }
     }
@@ -125,50 +125,50 @@ object GameManager {
             {
                 val a = compInt(); val b = compInt()
                 val c = (1..(a + b)).random()
-                Question("$a + $b \u2212 $c", a + b - c)
+                Question("$a + $b − $c", a + b - c)
             },
             // a - b + c
             {
                 val a = compInt(); val b = (1..a).random(); val c = compInt()
-                Question("$a \u2212 $b + $c", a - b + c)
+                Question("$a − $b + $c", a - b + c)
             },
             // a × b + c  (× first)
             {
                 val a = smallInt(); val b = smallInt(); val c = compInt()
-                Question("$a \u00d7 $b + $c", a * b + c)
+                Question("$a × $b + $c", a * b + c)
             },
             // a × b - c  (× first)
             {
                 val a = smallInt(); val b = smallInt()
                 val c = (1..(a * b)).random()
-                Question("$a \u00d7 $b \u2212 $c", a * b - c)
+                Question("$a × $b − $c", a * b - c)
             },
             // a ÷ b + c  (÷ first)
             {
                 val b = smallInt(); val q = smallInt(); val a = b * q; val c = compInt()
-                Question("$a \u00f7 $b + $c", q + c)
+                Question("$a ÷ $b + $c", q + c)
             },
             // a ÷ b - c  (÷ first)
             {
                 val b = smallInt(); val q = smallInt(); val a = b * q
                 val c = (1..maxOf(1, q)).random()
-                Question("$a \u00f7 $b \u2212 $c", q - c)
+                Question("$a ÷ $b − $c", q - c)
             },
             // a + b × c  (× has precedence)
             {
                 val a = compInt(); val b = smallInt(); val c = smallInt()
-                Question("$a + $b \u00d7 $c", a + b * c)
+                Question("$a + $b × $c", a + b * c)
             },
             // a - b × c  (× has precedence)
             {
                 val b = smallInt(); val c = smallInt(); val product = b * c
                 val a = (product..product + 50).random()
-                Question("$a \u2212 $b \u00d7 $c", a - product)
+                Question("$a − $b × $c", a - product)
             },
             // a ÷ b × c  (left to right)
             {
                 val b = smallInt(); val q = smallInt(); val a = b * q; val c = smallInt()
-                Question("$a \u00f7 $b \u00d7 $c", q * c)
+                Question("$a ÷ $b × $c", q * c)
             }
         )
         return patterns.random()()
@@ -183,7 +183,7 @@ object GameManager {
                 val a = smallInt(); val b = smallInt(); val c = smallInt()
                 val d = smallInt(); val ab = a * b; val cd = c * d
                 val e = (1..(ab + cd)).random()
-                Question("$a \u00d7 $b + $c \u00d7 $d \u2212 $e", ab + cd - e)
+                Question("$a × $b + $c × $d − $e", ab + cd - e)
             },
             // a + b × c - d ÷ e
             {
@@ -193,7 +193,7 @@ object GameManager {
                 val maxQ = a + bc
                 val q = (2..minOf(12, maxQ.coerceAtLeast(2))).random()
                 val d = e * q
-                Question("$a + $b \u00d7 $c \u2212 $d \u00f7 $e", a + bc - q)
+                Question("$a + $b × $c − $d ÷ $e", a + bc - q)
             },
             // a × b - c ÷ d + e
             {
@@ -203,7 +203,7 @@ object GameManager {
                 val maxQ = prod + e
                 val q = (2..minOf(12, maxQ.coerceAtLeast(2))).random()
                 val c = d * q
-                Question("$a \u00d7 $b \u2212 $c \u00f7 $d + $e", prod - q + e)
+                Question("$a × $b − $c ÷ $d + $e", prod - q + e)
             },
             // a ÷ b × c + d - e
             {
@@ -211,7 +211,7 @@ object GameManager {
                 val c = smallInt(); val prod = q1 * c
                 val d = compInt()
                 val e = (1..(prod + d)).random()
-                Question("$a \u00f7 $b \u00d7 $c + $d \u2212 $e", prod + d - e)
+                Question("$a ÷ $b × $c + $d − $e", prod + d - e)
             },
             // a + b - c × d ÷ e
             {
@@ -223,7 +223,7 @@ object GameManager {
                 val factors = (2..12).filter { cd % it == 0 && cd / it in 2..12 }
                 val c = factors.random()
                 val d = cd / c
-                Question("$a + $b \u2212 $c \u00d7 $d \u00f7 $e", total - q)
+                Question("$a + $b − $c × $d ÷ $e", total - q)
             },
             // a × b + c - d × e
             {
@@ -234,7 +234,7 @@ object GameManager {
                 val de = d * e
                 val minC = (de - ab).coerceAtLeast(1)
                 val c = (minC..maxOf(minC, 30)).random()
-                Question("$a \u00d7 $b + $c \u2212 $d \u00d7 $e", ab + c - de)
+                Question("$a × $b + $c − $d × $e", ab + c - de)
             }
         )
         return patterns.random()()

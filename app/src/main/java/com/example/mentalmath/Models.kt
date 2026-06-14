@@ -15,15 +15,15 @@ enum class GameMode(val label: String) {
 
 enum class Operator(val symbol: String) {
     ADDITION("+"),
-    SUBTRACTION("\u2212"),
-    MULTIPLICATION("\u00d7"),
-    DIVISION("\u00f7")
+    SUBTRACTION("−"),
+    MULTIPLICATION("×"),
+    DIVISION("÷")
 }
 
 enum class QuestionType(val label: String) {
     BASIC("Basic (e.g. 12 + 12)"),
-    COMPOUND_2("2 Operations (e.g. 12 \u00f7 3 + 4)"),
-    COMPOUND_4("4 Operations (e.g. 8 \u00d7 3 + 12 \u00f7 4 \u2212 5)"),
+    COMPOUND_2("2 Operations (e.g. 12 ÷ 3 + 4)"),
+    COMPOUND_4("4 Operations (e.g. 8 × 3 + 12 ÷ 4 − 5)"),
     PERCENTAGE("Percentages (e.g. 20% of 50)")
 }
 
