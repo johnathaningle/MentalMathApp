@@ -45,6 +45,41 @@
             android:checked="false"
             android:text="@string/percentage_questions" />
 
+        <CheckBox
+            android:id="@+id/cbAppliedProblems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/applied_problem_questions" />
+
+        <CheckBox
+            android:id="@+id/cbAlgebra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/algebra_questions" />
+
+        <CheckBox
+            android:id="@+id/cbExponentsRoots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/exponents_roots_questions" />
+
+        <CheckBox
+            android:id="@+id/cbGeometry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/geometry_questions" />
+
+        <CheckBox
+            android:id="@+id/cbNumberTheory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/number_theory_questions" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -276,6 +311,30 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:text="3" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/exam_settings"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/question_count">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etQuestionCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="15" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

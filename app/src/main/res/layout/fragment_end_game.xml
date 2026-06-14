@@ -194,24 +194,71 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/tvReviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/answer_review_title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/statsCard" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAnswerReview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvReviewTitle"
+            tools:listitem="@layout/item_question_review" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetryMissed"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/retry_missed"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rvAnswerReview" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnShareResults"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/share_results"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnRetryMissed" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPlayAgain"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="@string/play_again"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/statsCard" />
+            app:layout_constraintTop_toBottomOf="@id/btnShareResults" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnHome"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/home"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnPlayAgain" />

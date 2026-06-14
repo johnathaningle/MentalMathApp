@@ -10,7 +10,8 @@ enum class Difficulty(val label: String) {
 enum class GameMode(val label: String) {
     TIMED("Timed"),
     ENDLESS("Endless"),
-    SURVIVAL("Survival")
+    SURVIVAL("Survival"),
+    EXAM("Exam")
 }
 
 enum class Operator(val symbol: String) {
@@ -24,7 +25,23 @@ enum class QuestionType(val label: String) {
     BASIC("Basic (e.g. 12 + 12)"),
     COMPOUND_2("2 Operations (e.g. 12 ÷ 3 + 4)"),
     COMPOUND_4("4 Operations (e.g. 8 × 3 + 12 ÷ 4 − 5)"),
-    PERCENTAGE("Percentages (e.g. 20% of 50)")
+    PERCENTAGE("Percentages (e.g. 20% of 50)"),
+    APPLIED_PROBLEM("Word Problems"),
+    ALGEBRA("Algebra (Linear Equations)"),
+    EXPONENTS_ROOTS("Exponents & Roots"),
+    GEOMETRY("Geometry"),
+    NUMBER_THEORY("Number Theory")
+}
+
+enum class Topic(val label: String) {
+    BASIC("Basic"),
+    COMPOUND("Compound"),
+    PERCENTAGE("Percentage"),
+    APPLIED("Applied"),
+    ALGEBRA("Algebra"),
+    EXPONENTS_ROOTS("Exponents & Roots"),
+    GEOMETRY("Geometry"),
+    NUMBER_THEORY("Number Theory")
 }
 
 data class DifficultyConfig(
@@ -34,7 +51,8 @@ data class DifficultyConfig(
     val operators: List<Operator> = listOf(Operator.ADDITION, Operator.SUBTRACTION),
     val questionTypes: List<QuestionType> = listOf(QuestionType.BASIC),
     val timeLimitSeconds: Int = 90,
-    val lives: Int = 5
+    val lives: Int = 5,
+    val questionCount: Int = 15
 )
 
 fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficulty) {
@@ -42,27 +60,35 @@ fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficult
         basicNumbers = 1..20,
         compoundNumbers = 1..10,
         operators = listOf(Operator.ADDITION, Operator.SUBTRACTION),
-        questionTypes = listOf(QuestionType.BASIC),
+        questionTypes = listOf(QuestionType.BASIC, QuestionType.APPLIED_PROBLEM),
         timeLimitSeconds = 90,
-        lives = 5
+        lives = 5,
+        questionCount = 15
     )
     Difficulty.MEDIUM -> DifficultyConfig(
         basicNumbers = 1..50,
         compoundNumbers = 1..20,
         operators = Operator.entries.toList(),
-        questionTypes = listOf(QuestionType.COMPOUND_2, QuestionType.PERCENTAGE),
+        questionTypes = listOf(
+            QuestionType.COMPOUND_2, QuestionType.PERCENTAGE,
+            QuestionType.APPLIED_PROBLEM, QuestionType.NUMBER_THEORY
+        ),
         timeLimitSeconds = 60,
-        lives = 3
+        lives = 3,
+        questionCount = 20
     )
     Difficulty.HARD -> DifficultyConfig(
         basicNumbers = 1..100,
         compoundNumbers = 1..30,
         operators = Operator.entries.toList(),
         questionTypes = listOf(
-            QuestionType.COMPOUND_4, QuestionType.PERCENTAGE
+            QuestionType.COMPOUND_4, QuestionType.PERCENTAGE,
+            QuestionType.ALGEBRA, QuestionType.EXPONENTS_ROOTS,
+            QuestionType.GEOMETRY, QuestionType.NUMBER_THEORY
         ),
         timeLimitSeconds = 45,
-        lives = 2
+        lives = 2,
+        questionCount = 25
     )
     Difficulty.CUSTOM -> DifficultyConfig(
         basicNumbers = 1..20,
@@ -70,13 +96,15 @@ fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficult
         operators = listOf(Operator.ADDITION, Operator.SUBTRACTION),
         questionTypes = listOf(QuestionType.BASIC),
         timeLimitSeconds = 90,
-        lives = 5
+        lives = 5,
+        questionCount = 15
     )
 }
 
 data class Question(
     val displayText: String,
-    val correctAnswer: Int
+    val correctAnswer: Int,
+    val topic: Topic? = null
 )
 
 data class QuestionResult(
@@ -84,6 +112,11 @@ data class QuestionResult(
     val userAnswer: Int?,
     val isCorrect: Boolean,
     val timeTakenMs: Long
+)
+
+data class TopicBreakdown(
+    val totalQuestions: Int = 0,
+    val correctAnswers: Int = 0
 )
 
 data class GameResult(
@@ -94,5 +127,6 @@ data class GameResult(
     val correctAnswers: Int,
     val bestStreak: Int,
     val durationMs: Long,
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+    val topicsBreakdown: Map<Topic, TopicBreakdown> = emptyMap()
 )

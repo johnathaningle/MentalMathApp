@@ -131,17 +131,30 @@ class GameFragment : Fragment() {
         when (GameManager.gameMode) {
             GameMode.TIMED -> {
                 binding.timerGroup.visibility = View.VISIBLE
+                binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.GONE
                 updateTimerDisplay()
             }
             GameMode.SURVIVAL -> {
                 binding.timerGroup.visibility = View.GONE
+                binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.VISIBLE
                 binding.tvLives.text = "❤ ".repeat(GameManager.lives.coerceAtLeast(0)).trim()
             }
             GameMode.ENDLESS -> {
                 binding.timerGroup.visibility = View.GONE
+                binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.GONE
+            }
+            GameMode.EXAM -> {
+                binding.timerGroup.visibility = View.GONE
+                binding.examProgressGroup.visibility = View.VISIBLE
+                binding.livesGroup.visibility = View.GONE
+                binding.tvExamProgress.text = getString(
+                    R.string.exam_progress,
+                    GameManager.questions.size,
+                    GameManager.config.questionCount
+                )
             }
         }
     }

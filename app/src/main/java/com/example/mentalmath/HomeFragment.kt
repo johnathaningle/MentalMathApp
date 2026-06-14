@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mentalmath.databinding.FragmentHomeBinding
@@ -36,6 +37,7 @@ class HomeFragment : Fragment() {
         binding.chipTimed.setOnClickListener { GameManager.gameMode = GameMode.TIMED }
         binding.chipEndless.setOnClickListener { GameManager.gameMode = GameMode.ENDLESS }
         binding.chipSurvival.setOnClickListener { GameManager.gameMode = GameMode.SURVIVAL }
+        binding.chipExam.setOnClickListener { GameManager.gameMode = GameMode.EXAM }
 
         binding.btnStart.setOnClickListener {
             if (GameManager.difficulty == Difficulty.CUSTOM) {
@@ -63,6 +65,26 @@ class HomeFragment : Fragment() {
         binding.tvStatsAccuracy.text = getString(R.string.stats_accuracy, "%.1f".format(StatsManager.getAccuracy()))
         binding.tvStatsBestScore.text = getString(R.string.stats_best_score, StatsManager.getBestScore())
         binding.tvStatsBestStreak.text = getString(R.string.stats_best_streak, StatsManager.getBestStreak())
+
+        val playedTopics = StatsManager.getPlayedTopics()
+        if (playedTopics.isNotEmpty()) {
+            binding.tvTopicTitle.visibility = View.VISIBLE
+            binding.topicStatsContainer.visibility = View.VISIBLE
+            binding.topicStatsContainer.removeAllViews()
+            for (topic in playedTopics) {
+                val total = StatsManager.getTopicTotalQuestions(topic)
+                val accuracy = StatsManager.getTopicAccuracy(topic)
+                val row = TextView(requireContext()).apply {
+                    text = getString(R.string.topic_row, topic.label, total, "%.1f%%".format(accuracy))
+                    textSize = 14f
+                    setPadding(0, 4, 0, 4)
+                }
+                binding.topicStatsContainer.addView(row)
+            }
+        } else {
+            binding.tvTopicTitle.visibility = View.GONE
+            binding.topicStatsContainer.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {
