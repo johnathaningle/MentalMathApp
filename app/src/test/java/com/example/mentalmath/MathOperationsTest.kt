@@ -88,15 +88,10 @@ class MathOperationsTest {
     }
 
     @Test
-    fun `custom default config values`() {
+    fun `custom default config falls back to easy`() {
         val c = getDefaultConfig(Difficulty.CUSTOM)
-        assertEquals(1..20, c.basicNumbers)
-        assertEquals(1..20, c.compoundNumbers)
-        assertEquals(2..12, c.smallNumbers)
-        assertEquals(listOf(Operator.ADDITION, Operator.SUBTRACTION), c.operators)
-        assertEquals(listOf(QuestionType.BASIC), c.questionTypes)
-        assertEquals(90, c.timeLimitSeconds)
-        assertEquals(5, c.lives)
+        val easy = getDefaultConfig(Difficulty.EASY)
+        assertEquals(easy, c)
     }
 
     // ======================== BASIC — ADDITION ========================
@@ -297,7 +292,7 @@ class MathOperationsTest {
         GameManager.streak = 10
         GameManager.bestStreak = 10
         GameManager.remainingTimeMs = 0
-        GameManager.questions = mutableListOf(QuestionResult(Question("x", 0), 0, true, 0))
+        GameManager.questions = mutableListOf(QuestionResult(Question("x", 0, Topic.BASIC), 0, true, 0))
 
         GameManager.startGame()
 
@@ -402,6 +397,19 @@ class MathOperationsTest {
     }
 
     @Test
+    fun `endless mode wrong answer does not end game`() {
+        GameManager.difficulty = Difficulty.EASY
+        GameManager.gameMode = GameMode.ENDLESS
+        GameManager.startGame()
+        val q = GameManager.generateQuestion()
+        assertNotNull(q)
+        val result = GameManager.submitAnswer(q.correctAnswer + 1)
+        assertFalse(result.isCorrect)
+        assertFalse(GameManager.isGameOver())
+        assertEquals(0, GameManager.streak)
+    }
+
+    @Test
     fun `timed mode game over when time expires`() {
         GameManager.gameMode = GameMode.TIMED
         GameManager.remainingTimeMs = 0
@@ -494,14 +502,14 @@ class MathOperationsTest {
 
     @Test
     fun `Question data class stores values correctly`() {
-        val q = Question("1 + 2 = ?", 3)
+        val q = Question("1 + 2 = ?", 3, Topic.BASIC)
         assertEquals("1 + 2 = ?", q.displayText)
         assertEquals(3, q.correctAnswer)
     }
 
     @Test
     fun `QuestionResult tracks correctness`() {
-        val q = Question("1 + 2 = ?", 3)
+        val q = Question("1 + 2 = ?", 3, Topic.BASIC)
         val correct = QuestionResult(q, 3, true, 100L)
         assertTrue(correct.isCorrect)
         assertEquals(3, correct.userAnswer)

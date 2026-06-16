@@ -19,8 +19,9 @@ object GameManager {
     private var currentQ: Question? = null
 
     fun startGame() {
-        if (difficulty != Difficulty.CUSTOM) {
-            config = getDefaultConfig(difficulty)
+        config = when (difficulty) {
+            Difficulty.CUSTOM -> config
+            else -> getDefaultConfig(difficulty)
         }
         score = 0
         streak = 0
@@ -44,7 +45,7 @@ object GameManager {
 
     fun submitAnswer(userAnswer: Int): QuestionResult {
         val question = currentQ ?: return QuestionResult(
-            Question("", 0), userAnswer, false, 0
+            Question("", 0, Topic.BASIC), userAnswer, false, 0
         )
         val timeTaken = System.currentTimeMillis() - questionStartTime
         val isCorrect = userAnswer == question.correctAnswer
@@ -77,7 +78,7 @@ object GameManager {
 
         val breakdown = mutableMapOf<Topic, TopicBreakdown>()
         for (qr in questions) {
-            val topic = qr.question.topic ?: continue
+            val topic = qr.question.topic
             val current = breakdown.getOrDefault(topic, TopicBreakdown())
             breakdown[topic] = TopicBreakdown(
                 totalQuestions = current.totalQuestions + 1,
@@ -100,5 +101,5 @@ object GameManager {
     }
 
     fun getMissedTopics(): Set<Topic> =
-        questions.filter { !it.isCorrect }.mapNotNull { it.question.topic }.toSet()
+        questions.filter { !it.isCorrect }.map { it.question.topic }.toSet()
 }

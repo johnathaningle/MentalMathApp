@@ -30,7 +30,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(FragmentHomeBinding::i
             if (GameManager.difficulty == Difficulty.CUSTOM) {
                 CustomDifficultyDialog().show(parentFragmentManager, "custom_difficulty")
             } else {
-                GameManager.config = getDefaultConfig(GameManager.difficulty)
                 GameManager.startGame()
                 findNavController().navigate(R.id.action_HomeFragment_to_GameFragment)
             }

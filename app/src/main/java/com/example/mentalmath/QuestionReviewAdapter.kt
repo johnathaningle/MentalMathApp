@@ -33,13 +33,8 @@ class QuestionReviewAdapter(
                 binding.tvReviewCorrectAnswer.visibility = View.VISIBLE
             }
 
-            val topic = result.question.topic
-            if (topic != null) {
-                binding.tvReviewTopic.visibility = View.VISIBLE
-                binding.tvReviewTopic.text = topic.label
-            } else {
-                binding.tvReviewTopic.visibility = View.GONE
-            }
+            binding.tvReviewTopic.visibility = View.VISIBLE
+            binding.tvReviewTopic.text = result.question.topic.label
         }
     }
 

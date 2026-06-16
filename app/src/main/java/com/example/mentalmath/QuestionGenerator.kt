@@ -135,17 +135,7 @@ class Compound4Generator : QuestionGenerator {
                 val e = (1..(prod + d)).random()
                 Question("$a ÷ $b × $c + $d − $e = ?", prod + d - e, Topic.COMPOUND)
             },
-            {
-                val a = comp(); val b = comp(); val total = a + b
-                val e = small()
-                val maxQ = minOf(12, total)
-                val q = (2..maxQ.coerceAtLeast(2)).random()
-                val cd = q * e
-                val factors = (2..12).filter { cd % it == 0 && cd / it in 2..12 }
-                val c = factors.random()
-                val d = cd / c
-                Question("$a + $b − $c × $d ÷ $e = ?", total - q, Topic.COMPOUND)
-            },
+            { compound4Pattern5(comp, small) },
             {
                 val a = small(); val b = small(); val ab = a * b
                 val d = small()
@@ -158,6 +148,22 @@ class Compound4Generator : QuestionGenerator {
             }
         )
         return patterns.random()()
+    }
+
+    private fun compound4Pattern5(comp: () -> Int, small: () -> Int): Question {
+        val a = comp(); val b = comp(); val total = a + b
+        val maxQ = minOf(12, total).coerceAtLeast(2)
+        while (true) {
+            val e = small()
+            val q = (2..maxQ).random()
+            val cd = q * e
+            val factors = (2..12).filter { cd % it == 0 && cd / it in 2..12 }
+            if (factors.isNotEmpty()) {
+                val c = factors.random()
+                val d = cd / c
+                return Question("$a + $b − $c × $d ÷ $e = ?", total - q, Topic.COMPOUND)
+            }
+        }
     }
 }
 
@@ -194,17 +200,11 @@ class AppliedProblemGenerator : QuestionGenerator {
                 Question("How many inches are in $feet feet?", feet * 12, Topic.APPLIED)
             },
             {
-                var avg = 0; var aa = 0; var bb = 0; var cc = 0
-                while (true) {
-                    aa = (10..100).random()
-                    bb = (10..100).random()
-                    cc = (10..100).random()
-                    val sum = aa + bb + cc
-                    if (sum % 3 == 0) {
-                        avg = sum / 3
-                        break
-                    }
-                }
+                val avg = (10..100).random()
+                val total = avg * 3
+                val aa = (maxOf(10, total - 200)..minOf(100, total - 20)).random()
+                val bb = (maxOf(10, total - aa - 100)..minOf(100, total - aa - 10)).random()
+                val cc = total - aa - bb
                 Question(
                     "John scored $aa, $bb, and $cc on three tests. What is his average?",
                     avg, Topic.APPLIED

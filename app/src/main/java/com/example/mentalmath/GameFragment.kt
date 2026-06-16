@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import com.example.mentalmath.databinding.FragmentGameBinding
 
@@ -126,7 +127,7 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
                 binding.timerGroup.visibility = View.GONE
                 binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.VISIBLE
-                binding.tvLives.text = "❤ ".repeat(GameManager.lives.coerceAtLeast(0)).trim()
+                binding.tvLives.text = "❤".repeat(GameManager.lives.coerceAtLeast(0))
             }
             GameMode.ENDLESS -> {
                 binding.timerGroup.visibility = View.GONE
@@ -170,8 +171,15 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
     }
 
     private fun endSession() {
-        countDownTimer?.cancel()
-        navigateToEnd()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.end_session_title)
+            .setMessage(R.string.end_session_confirm)
+            .setPositiveButton(R.string.end) { _, _ ->
+                countDownTimer?.cancel()
+                navigateToEnd()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun navigateToEnd() {
