@@ -49,25 +49,24 @@ object StatsManager {
     }
 
     fun saveGameResult(result: GameResult) {
-        prefs.edit()
+        val editor = prefs.edit()
             .putInt(KEY_GAMES_PLAYED, getGamesPlayed() + 1)
             .putInt(KEY_TOTAL_QUESTIONS, getTotalQuestions() + result.totalQuestions)
             .putInt(KEY_TOTAL_CORRECT, getTotalCorrect() + result.correctAnswers)
             .putInt(KEY_BEST_SCORE, maxOf(getBestScore(), result.score))
             .putInt(KEY_BEST_STREAK, maxOf(getBestStreak(), result.bestStreak))
             .putLong(KEY_TOTAL_TIME, getTotalTimeMs() + result.durationMs)
-            .apply()
 
         for ((topic, breakdown) in result.topicsBreakdown) {
             val keyQuestions = "topic_${topic.name}_questions"
             val keyCorrect = "topic_${topic.name}_correct"
             val keyBestScore = "topic_${topic.name}_best_score"
 
-            prefs.edit()
+            editor
                 .putInt(keyQuestions, prefs.getInt(keyQuestions, 0) + breakdown.totalQuestions)
                 .putInt(keyCorrect, prefs.getInt(keyCorrect, 0) + breakdown.correctAnswers)
                 .putInt(keyBestScore, maxOf(prefs.getInt(keyBestScore, 0), result.score))
-                .apply()
         }
+        editor.apply()
     }
 }

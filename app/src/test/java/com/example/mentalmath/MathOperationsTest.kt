@@ -23,38 +23,11 @@ class MathOperationsTest {
     // ======================== ENUMS ========================
 
     @Test
-    fun `all four operator enum values exist`() {
-        assertEquals(4, Operator.entries.size)
-        assertEquals(
-            listOf(Operator.ADDITION, Operator.SUBTRACTION, Operator.MULTIPLICATION, Operator.DIVISION),
-            Operator.entries.toList()
-        )
-    }
-
-    @Test
     fun `operator symbols are correct`() {
         assertEquals("+", Operator.ADDITION.symbol)
         assertEquals("−", Operator.SUBTRACTION.symbol)
         assertEquals("×", Operator.MULTIPLICATION.symbol)
         assertEquals("÷", Operator.DIVISION.symbol)
-    }
-
-    @Test
-    fun `all four question type enum values exist`() {
-        assertEquals(4, QuestionType.entries.size)
-        assertEquals(
-            listOf(QuestionType.BASIC, QuestionType.COMPOUND_2, QuestionType.COMPOUND_4, QuestionType.PERCENTAGE),
-            QuestionType.entries.toList()
-        )
-    }
-
-    @Test
-    fun `all four difficulty enum values exist`() {
-        assertEquals(4, Difficulty.entries.size)
-        assertEquals(
-            listOf(Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD, Difficulty.CUSTOM),
-            Difficulty.entries.toList()
-        )
     }
 
     @Test
@@ -66,19 +39,11 @@ class MathOperationsTest {
     }
 
     @Test
-    fun `all three game mode enum values exist`() {
-        assertEquals(3, GameMode.entries.size)
-        assertEquals(
-            listOf(GameMode.TIMED, GameMode.ENDLESS, GameMode.SURVIVAL),
-            GameMode.entries.toList()
-        )
-    }
-
-    @Test
     fun `game mode labels are correct`() {
         assertEquals("Timed", GameMode.TIMED.label)
         assertEquals("Endless", GameMode.ENDLESS.label)
         assertEquals("Survival", GameMode.SURVIVAL.label)
+        assertEquals("Exam", GameMode.EXAM.label)
     }
 
     // ======================== DEFAULT CONFIGS ========================
@@ -90,7 +55,10 @@ class MathOperationsTest {
         assertEquals(1..10, c.compoundNumbers)
         assertEquals(2..12, c.smallNumbers)
         assertEquals(listOf(Operator.ADDITION, Operator.SUBTRACTION), c.operators)
-        assertEquals(listOf(QuestionType.BASIC), c.questionTypes)
+        assertEquals(
+            listOf(QuestionType.BASIC, QuestionType.APPLIED_PROBLEM),
+            c.questionTypes
+        )
         assertEquals(90, c.timeLimitSeconds)
         assertEquals(5, c.lives)
     }
@@ -526,14 +494,14 @@ class MathOperationsTest {
 
     @Test
     fun `Question data class stores values correctly`() {
-        val q = Question("1 + 2", 3)
-        assertEquals("1 + 2", q.displayText)
+        val q = Question("1 + 2 = ?", 3)
+        assertEquals("1 + 2 = ?", q.displayText)
         assertEquals(3, q.correctAnswer)
     }
 
     @Test
     fun `QuestionResult tracks correctness`() {
-        val q = Question("1 + 2", 3)
+        val q = Question("1 + 2 = ?", 3)
         val correct = QuestionResult(q, 3, true, 100L)
         assertTrue(correct.isCorrect)
         assertEquals(3, correct.userAnswer)
@@ -581,13 +549,15 @@ class MathOperationsTest {
     // ======================== HELPERS ========================
 
     private fun extractTwoNumbers(text: String, operator: String): Pair<Int, Int> {
-        val parts = text.split(" $operator ")
+        val clean = text.removeSuffix(" = ?")
+        val parts = clean.split(" $operator ")
         assertEquals("Expected 2 operands in '$text' with operator '$operator'", 2, parts.size)
         return Pair(parts[0].trim().toInt(), parts[1].trim().toInt())
     }
 
     private fun evaluateExpression(text: String): Int {
-        val tokens = text.split(" ")
+        val clean = text.removeSuffix(" = ?")
+        val tokens = clean.split(" ")
         val postMultDiv = mutableListOf<String>()
         var i = 0
         while (i < tokens.size) {

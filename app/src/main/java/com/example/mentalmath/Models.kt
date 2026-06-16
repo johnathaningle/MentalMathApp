@@ -21,16 +21,16 @@ enum class Operator(val symbol: String) {
     DIVISION("÷")
 }
 
-enum class QuestionType(val label: String) {
-    BASIC("Basic (e.g. 12 + 12)"),
-    COMPOUND_2("2 Operations (e.g. 12 ÷ 3 + 4)"),
-    COMPOUND_4("4 Operations (e.g. 8 × 3 + 12 ÷ 4 − 5)"),
-    PERCENTAGE("Percentages (e.g. 20% of 50)"),
-    APPLIED_PROBLEM("Word Problems"),
-    ALGEBRA("Algebra (Linear Equations)"),
-    EXPONENTS_ROOTS("Exponents & Roots"),
-    GEOMETRY("Geometry"),
-    NUMBER_THEORY("Number Theory")
+enum class QuestionType(val label: String, val associatedTopic: Topic) {
+    BASIC("Basic (e.g. 12 + 12)", Topic.BASIC),
+    COMPOUND_2("2 Operations (e.g. 12 ÷ 3 + 4)", Topic.COMPOUND),
+    COMPOUND_4("4 Operations (e.g. 8 × 3 + 12 ÷ 4 − 5)", Topic.COMPOUND),
+    PERCENTAGE("Percentages (e.g. 20% of 50)", Topic.PERCENTAGE),
+    APPLIED_PROBLEM("Word Problems", Topic.APPLIED),
+    ALGEBRA("Algebra (Linear Equations)", Topic.ALGEBRA),
+    EXPONENTS_ROOTS("Exponents & Roots", Topic.EXPONENTS_ROOTS),
+    GEOMETRY("Geometry", Topic.GEOMETRY),
+    NUMBER_THEORY("Number Theory", Topic.NUMBER_THEORY)
 }
 
 enum class Topic(val label: String) {
@@ -41,7 +41,18 @@ enum class Topic(val label: String) {
     ALGEBRA("Algebra"),
     EXPONENTS_ROOTS("Exponents & Roots"),
     GEOMETRY("Geometry"),
-    NUMBER_THEORY("Number Theory")
+    NUMBER_THEORY("Number Theory");
+
+    fun toRetryQuestionType(): QuestionType = when (this) {
+        BASIC -> QuestionType.BASIC
+        COMPOUND -> QuestionType.COMPOUND_2
+        PERCENTAGE -> QuestionType.PERCENTAGE
+        APPLIED -> QuestionType.APPLIED_PROBLEM
+        ALGEBRA -> QuestionType.ALGEBRA
+        EXPONENTS_ROOTS -> QuestionType.EXPONENTS_ROOTS
+        GEOMETRY -> QuestionType.GEOMETRY
+        NUMBER_THEORY -> QuestionType.NUMBER_THEORY
+    }
 }
 
 data class DifficultyConfig(

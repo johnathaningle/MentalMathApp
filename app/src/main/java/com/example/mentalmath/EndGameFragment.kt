@@ -2,25 +2,12 @@ package com.example.mentalmath
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mentalmath.databinding.FragmentEndGameBinding
 
-class EndGameFragment : Fragment() {
-
-    private var _binding: FragmentEndGameBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEndGameBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+class EndGameFragment : BindingFragment<FragmentEndGameBinding>(FragmentEndGameBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,7 +71,7 @@ class EndGameFragment : Fragment() {
 
         for ((i, qr) in questions.withIndex()) {
             val mark = if (qr.isCorrect) "\u2713" else "\u2717"
-            sb.appendLine("${i + 1}. ${qr.question.displayText} = ? $mark")
+            sb.appendLine("${i + 1}. ${qr.question.displayText} $mark")
             sb.appendLine("   Your answer: ${qr.userAnswer ?: "—"}")
             if (!qr.isCorrect) {
                 sb.appendLine("   Correct: ${qr.question.correctAnswer}")
@@ -96,10 +83,5 @@ class EndGameFragment : Fragment() {
             putExtra(Intent.EXTRA_TEXT, sb.toString())
         }
         startActivity(Intent.createChooser(intent, "Share Results"))
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -15,7 +15,7 @@ class QuestionReviewAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(result: QuestionResult) {
-            binding.tvReviewQuestion.text = "${result.question.displayText} = ?"
+            binding.tvReviewQuestion.text = result.question.displayText
             binding.tvReviewYourAnswer.text = "Your answer: ${result.userAnswer ?: "—"}"
 
             if (result.isCorrect) {
