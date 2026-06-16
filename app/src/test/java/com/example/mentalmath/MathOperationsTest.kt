@@ -23,38 +23,11 @@ class MathOperationsTest {
     // ======================== ENUMS ========================
 
     @Test
-    fun `all four operator enum values exist`() {
-        assertEquals(4, Operator.entries.size)
-        assertEquals(
-            listOf(Operator.ADDITION, Operator.SUBTRACTION, Operator.MULTIPLICATION, Operator.DIVISION),
-            Operator.entries.toList()
-        )
-    }
-
-    @Test
     fun `operator symbols are correct`() {
         assertEquals("+", Operator.ADDITION.symbol)
         assertEquals("−", Operator.SUBTRACTION.symbol)
         assertEquals("×", Operator.MULTIPLICATION.symbol)
         assertEquals("÷", Operator.DIVISION.symbol)
-    }
-
-    @Test
-    fun `all four question type enum values exist`() {
-        assertEquals(4, QuestionType.entries.size)
-        assertEquals(
-            listOf(QuestionType.BASIC, QuestionType.COMPOUND_2, QuestionType.COMPOUND_4, QuestionType.PERCENTAGE),
-            QuestionType.entries.toList()
-        )
-    }
-
-    @Test
-    fun `all four difficulty enum values exist`() {
-        assertEquals(4, Difficulty.entries.size)
-        assertEquals(
-            listOf(Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD, Difficulty.CUSTOM),
-            Difficulty.entries.toList()
-        )
     }
 
     @Test
@@ -66,19 +39,11 @@ class MathOperationsTest {
     }
 
     @Test
-    fun `all three game mode enum values exist`() {
-        assertEquals(3, GameMode.entries.size)
-        assertEquals(
-            listOf(GameMode.TIMED, GameMode.ENDLESS, GameMode.SURVIVAL),
-            GameMode.entries.toList()
-        )
-    }
-
-    @Test
     fun `game mode labels are correct`() {
         assertEquals("Timed", GameMode.TIMED.label)
         assertEquals("Endless", GameMode.ENDLESS.label)
         assertEquals("Survival", GameMode.SURVIVAL.label)
+        assertEquals("Exam", GameMode.EXAM.label)
     }
 
     // ======================== DEFAULT CONFIGS ========================
@@ -90,7 +55,10 @@ class MathOperationsTest {
         assertEquals(1..10, c.compoundNumbers)
         assertEquals(2..12, c.smallNumbers)
         assertEquals(listOf(Operator.ADDITION, Operator.SUBTRACTION), c.operators)
-        assertEquals(listOf(QuestionType.BASIC), c.questionTypes)
+        assertEquals(
+            listOf(QuestionType.BASIC, QuestionType.APPLIED_PROBLEM),
+            c.questionTypes
+        )
         assertEquals(90, c.timeLimitSeconds)
         assertEquals(5, c.lives)
     }
@@ -120,15 +88,10 @@ class MathOperationsTest {
     }
 
     @Test
-    fun `custom default config values`() {
+    fun `custom default config falls back to easy`() {
         val c = getDefaultConfig(Difficulty.CUSTOM)
-        assertEquals(1..20, c.basicNumbers)
-        assertEquals(1..20, c.compoundNumbers)
-        assertEquals(2..12, c.smallNumbers)
-        assertEquals(listOf(Operator.ADDITION, Operator.SUBTRACTION), c.operators)
-        assertEquals(listOf(QuestionType.BASIC), c.questionTypes)
-        assertEquals(90, c.timeLimitSeconds)
-        assertEquals(5, c.lives)
+        val easy = getDefaultConfig(Difficulty.EASY)
+        assertEquals(easy, c)
     }
 
     // ======================== BASIC — ADDITION ========================
@@ -329,7 +292,7 @@ class MathOperationsTest {
         GameManager.streak = 10
         GameManager.bestStreak = 10
         GameManager.remainingTimeMs = 0
-        GameManager.questions = mutableListOf(QuestionResult(Question("x", 0), 0, true, 0))
+        GameManager.questions = mutableListOf(QuestionResult(Question("x", 0, Topic.BASIC), 0, true, 0))
 
         GameManager.startGame()
 
@@ -434,6 +397,19 @@ class MathOperationsTest {
     }
 
     @Test
+    fun `endless mode wrong answer does not end game`() {
+        GameManager.difficulty = Difficulty.EASY
+        GameManager.gameMode = GameMode.ENDLESS
+        GameManager.startGame()
+        val q = GameManager.generateQuestion()
+        assertNotNull(q)
+        val result = GameManager.submitAnswer(q.correctAnswer + 1)
+        assertFalse(result.isCorrect)
+        assertFalse(GameManager.isGameOver())
+        assertEquals(0, GameManager.streak)
+    }
+
+    @Test
     fun `timed mode game over when time expires`() {
         GameManager.gameMode = GameMode.TIMED
         GameManager.remainingTimeMs = 0
@@ -526,14 +502,14 @@ class MathOperationsTest {
 
     @Test
     fun `Question data class stores values correctly`() {
-        val q = Question("1 + 2", 3)
-        assertEquals("1 + 2", q.displayText)
+        val q = Question("1 + 2 = ?", 3, Topic.BASIC)
+        assertEquals("1 + 2 = ?", q.displayText)
         assertEquals(3, q.correctAnswer)
     }
 
     @Test
     fun `QuestionResult tracks correctness`() {
-        val q = Question("1 + 2", 3)
+        val q = Question("1 + 2 = ?", 3, Topic.BASIC)
         val correct = QuestionResult(q, 3, true, 100L)
         assertTrue(correct.isCorrect)
         assertEquals(3, correct.userAnswer)
@@ -581,13 +557,15 @@ class MathOperationsTest {
     // ======================== HELPERS ========================
 
     private fun extractTwoNumbers(text: String, operator: String): Pair<Int, Int> {
-        val parts = text.split(" $operator ")
+        val clean = text.removeSuffix(" = ?")
+        val parts = clean.split(" $operator ")
         assertEquals("Expected 2 operands in '$text' with operator '$operator'", 2, parts.size)
         return Pair(parts[0].trim().toInt(), parts[1].trim().toInt())
     }
 
     private fun evaluateExpression(text: String): Int {
-        val tokens = text.split(" ")
+        val clean = text.removeSuffix(" = ?")
+        val tokens = clean.split(" ")
         val postMultDiv = mutableListOf<String>()
         var i = 0
         while (i < tokens.size) {

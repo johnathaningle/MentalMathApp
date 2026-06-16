@@ -56,6 +56,27 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/examProgressGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvExamProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="0 / 15" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/livesGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,7 +107,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvScore"
-        tools:text="12 \u00d7 8 = ?" />
+        tools:text="12 × 8 = ?" />
 
     <ImageView
         android:id="@+id/ivFeedback"
@@ -136,7 +157,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivFeedback"
-        tools:text="\u2713 Correct!"
+        tools:text="✓ Correct!"
         tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
