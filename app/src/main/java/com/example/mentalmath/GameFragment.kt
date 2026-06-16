@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import com.example.mentalmath.databinding.FragmentGameBinding
 
@@ -170,8 +171,15 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
     }
 
     private fun endSession() {
-        countDownTimer?.cancel()
-        navigateToEnd()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.end_session_title)
+            .setMessage(R.string.end_session_confirm)
+            .setPositiveButton(R.string.end) { _, _ ->
+                countDownTimer?.cancel()
+                navigateToEnd()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun navigateToEnd() {

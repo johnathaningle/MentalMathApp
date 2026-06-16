@@ -397,6 +397,19 @@ class MathOperationsTest {
     }
 
     @Test
+    fun `endless mode wrong answer does not end game`() {
+        GameManager.difficulty = Difficulty.EASY
+        GameManager.gameMode = GameMode.ENDLESS
+        GameManager.startGame()
+        val q = GameManager.generateQuestion()
+        assertNotNull(q)
+        val result = GameManager.submitAnswer(q.correctAnswer + 1)
+        assertFalse(result.isCorrect)
+        assertFalse(GameManager.isGameOver())
+        assertEquals(0, GameManager.streak)
+    }
+
+    @Test
     fun `timed mode game over when time expires`() {
         GameManager.gameMode = GameMode.TIMED
         GameManager.remainingTimeMs = 0
