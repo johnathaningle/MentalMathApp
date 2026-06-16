@@ -30,43 +30,14 @@ object StatsManager {
         return if (total > 0) getTotalCorrect().toFloat() / total * 100f else 0f
     }
 
-    fun getTopicTotalQuestions(topic: Topic): Int =
-        prefs.getInt("topic_${topic.name}_questions", 0)
-
-    fun getTopicTotalCorrect(topic: Topic): Int =
-        prefs.getInt("topic_${topic.name}_correct", 0)
-
-    fun getTopicAccuracy(topic: Topic): Float {
-        val total = getTopicTotalQuestions(topic)
-        return if (total > 0) getTopicTotalCorrect(topic).toFloat() / total * 100f else 0f
-    }
-
-    fun getTopicBestScore(topic: Topic): Int =
-        prefs.getInt("topic_${topic.name}_best_score", 0)
-
-    fun getPlayedTopics(): List<Topic> {
-        return Topic.entries.filter { getTopicTotalQuestions(it) > 0 }
-    }
-
     fun saveGameResult(result: GameResult) {
-        val editor = prefs.edit()
+        prefs.edit()
             .putInt(KEY_GAMES_PLAYED, getGamesPlayed() + 1)
             .putInt(KEY_TOTAL_QUESTIONS, getTotalQuestions() + result.totalQuestions)
             .putInt(KEY_TOTAL_CORRECT, getTotalCorrect() + result.correctAnswers)
             .putInt(KEY_BEST_SCORE, maxOf(getBestScore(), result.score))
             .putInt(KEY_BEST_STREAK, maxOf(getBestStreak(), result.bestStreak))
             .putLong(KEY_TOTAL_TIME, getTotalTimeMs() + result.durationMs)
-
-        for ((topic, breakdown) in result.topicsBreakdown) {
-            val keyQuestions = "topic_${topic.name}_questions"
-            val keyCorrect = "topic_${topic.name}_correct"
-            val keyBestScore = "topic_${topic.name}_best_score"
-
-            editor
-                .putInt(keyQuestions, prefs.getInt(keyQuestions, 0) + breakdown.totalQuestions)
-                .putInt(keyCorrect, prefs.getInt(keyCorrect, 0) + breakdown.correctAnswers)
-                .putInt(keyBestScore, maxOf(prefs.getInt(keyBestScore, 0), result.score))
-        }
-        editor.apply()
+            .apply()
     }
 }

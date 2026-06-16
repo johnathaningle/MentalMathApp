@@ -75,20 +75,9 @@ object GameManager {
     fun getGameResult(): GameResult {
         val correct = questions.count { it.isCorrect }
         val duration = System.currentTimeMillis() - gameStartTime
-
-        val breakdown = mutableMapOf<Topic, TopicBreakdown>()
-        for (qr in questions) {
-            val topic = qr.question.topic
-            val current = breakdown.getOrDefault(topic, TopicBreakdown())
-            breakdown[topic] = TopicBreakdown(
-                totalQuestions = current.totalQuestions + 1,
-                correctAnswers = current.correctAnswers + (if (qr.isCorrect) 1 else 0)
-            )
-        }
-
         return GameResult(
             difficulty, gameMode, score, questions.size, correct,
-            bestStreak, duration, topicsBreakdown = breakdown
+            bestStreak, duration
         )
     }
 

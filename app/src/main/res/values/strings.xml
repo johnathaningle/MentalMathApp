@@ -66,8 +66,6 @@
     <string name="compound_number_range">Compound Number Range</string>
     <string name="small_number_range">Small Number Range (×, ÷ operands)</string>
     <string name="exam_progress">%1$d / %2$d</string>
-    <string name="topic_breakdown_title">Topic Breakdown</string>
-    <string name="topic_row">%1$s: %2$d Q — %3$s</string>
     <string name="answer_review_title">Answer Review</string>
     <string name="your_answer">Your answer: %d</string>
     <string name="correct_answer">Correct: %d</string>

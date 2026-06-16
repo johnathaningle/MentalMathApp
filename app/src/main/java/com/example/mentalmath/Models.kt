@@ -117,11 +117,6 @@ data class QuestionResult(
     val timeTakenMs: Long
 )
 
-data class TopicBreakdown(
-    val totalQuestions: Int = 0,
-    val correctAnswers: Int = 0
-)
-
 data class GameResult(
     val difficulty: Difficulty,
     val gameMode: GameMode,
@@ -130,6 +125,5 @@ data class GameResult(
     val correctAnswers: Int,
     val bestStreak: Int,
     val durationMs: Long,
-    val timestamp: Long = System.currentTimeMillis(),
-    val topicsBreakdown: Map<Topic, TopicBreakdown> = emptyMap()
+    val timestamp: Long = System.currentTimeMillis()
 )
