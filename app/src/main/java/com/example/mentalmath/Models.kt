@@ -101,15 +101,7 @@ fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficult
         lives = 2,
         questionCount = 25
     )
-    Difficulty.CUSTOM -> DifficultyConfig(
-        basicNumbers = 1..20,
-        compoundNumbers = 1..20,
-        operators = listOf(Operator.ADDITION, Operator.SUBTRACTION),
-        questionTypes = listOf(QuestionType.BASIC),
-        timeLimitSeconds = 90,
-        lives = 5,
-        questionCount = 15
-    )
+    Difficulty.CUSTOM -> getDefaultConfig(Difficulty.EASY)
 }
 
 data class Question(

@@ -19,8 +19,9 @@ object GameManager {
     private var currentQ: Question? = null
 
     fun startGame() {
-        if (difficulty != Difficulty.CUSTOM) {
-            config = getDefaultConfig(difficulty)
+        config = when (difficulty) {
+            Difficulty.CUSTOM -> config
+            else -> getDefaultConfig(difficulty)
         }
         score = 0
         streak = 0

@@ -88,15 +88,10 @@ class MathOperationsTest {
     }
 
     @Test
-    fun `custom default config values`() {
+    fun `custom default config falls back to easy`() {
         val c = getDefaultConfig(Difficulty.CUSTOM)
-        assertEquals(1..20, c.basicNumbers)
-        assertEquals(1..20, c.compoundNumbers)
-        assertEquals(2..12, c.smallNumbers)
-        assertEquals(listOf(Operator.ADDITION, Operator.SUBTRACTION), c.operators)
-        assertEquals(listOf(QuestionType.BASIC), c.questionTypes)
-        assertEquals(90, c.timeLimitSeconds)
-        assertEquals(5, c.lives)
+        val easy = getDefaultConfig(Difficulty.EASY)
+        assertEquals(easy, c)
     }
 
     // ======================== BASIC — ADDITION ========================
