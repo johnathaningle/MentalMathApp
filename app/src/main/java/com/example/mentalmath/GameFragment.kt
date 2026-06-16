@@ -126,7 +126,7 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
                 binding.timerGroup.visibility = View.GONE
                 binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.VISIBLE
-                binding.tvLives.text = "❤ ".repeat(GameManager.lives.coerceAtLeast(0)).trim()
+                binding.tvLives.text = "❤".repeat(GameManager.lives.coerceAtLeast(0))
             }
             GameMode.ENDLESS -> {
                 binding.timerGroup.visibility = View.GONE

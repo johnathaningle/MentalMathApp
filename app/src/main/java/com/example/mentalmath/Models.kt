@@ -107,7 +107,7 @@ fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficult
 data class Question(
     val displayText: String,
     val correctAnswer: Int,
-    val topic: Topic? = null
+    val topic: Topic
 )
 
 data class QuestionResult(

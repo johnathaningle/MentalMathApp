@@ -292,7 +292,7 @@ class MathOperationsTest {
         GameManager.streak = 10
         GameManager.bestStreak = 10
         GameManager.remainingTimeMs = 0
-        GameManager.questions = mutableListOf(QuestionResult(Question("x", 0), 0, true, 0))
+        GameManager.questions = mutableListOf(QuestionResult(Question("x", 0, Topic.BASIC), 0, true, 0))
 
         GameManager.startGame()
 
@@ -489,14 +489,14 @@ class MathOperationsTest {
 
     @Test
     fun `Question data class stores values correctly`() {
-        val q = Question("1 + 2 = ?", 3)
+        val q = Question("1 + 2 = ?", 3, Topic.BASIC)
         assertEquals("1 + 2 = ?", q.displayText)
         assertEquals(3, q.correctAnswer)
     }
 
     @Test
     fun `QuestionResult tracks correctness`() {
-        val q = Question("1 + 2 = ?", 3)
+        val q = Question("1 + 2 = ?", 3, Topic.BASIC)
         val correct = QuestionResult(q, 3, true, 100L)
         assertTrue(correct.isCorrect)
         assertEquals(3, correct.userAnswer)
