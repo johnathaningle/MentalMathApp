@@ -2,28 +2,16 @@ package com.example.mentalmath
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import com.example.mentalmath.databinding.FragmentGameBinding
 
-class GameFragment : Fragment() {
+class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::inflate) {
 
-    private var _binding: FragmentGameBinding? = null
-    private val binding get() = _binding!!
     private var countDownTimer: CountDownTimer? = null
     private var isShowingFeedback = false
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentGameBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,7 +43,7 @@ class GameFragment : Fragment() {
         updateHUD()
 
         val question = GameManager.generateQuestion()
-        binding.tvQuestion.text = "${question.displayText} = ?"
+        binding.tvQuestion.text = question.displayText
         binding.etAnswer.text.clear()
         binding.etAnswer.isEnabled = true
         binding.btnSubmit.isEnabled = true
@@ -131,17 +119,30 @@ class GameFragment : Fragment() {
         when (GameManager.gameMode) {
             GameMode.TIMED -> {
                 binding.timerGroup.visibility = View.VISIBLE
+                binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.GONE
                 updateTimerDisplay()
             }
             GameMode.SURVIVAL -> {
                 binding.timerGroup.visibility = View.GONE
+                binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.VISIBLE
-                binding.tvLives.text = "❤ ".repeat(GameManager.lives.coerceAtLeast(0)).trim()
+                binding.tvLives.text = "❤".repeat(GameManager.lives.coerceAtLeast(0))
             }
             GameMode.ENDLESS -> {
                 binding.timerGroup.visibility = View.GONE
+                binding.examProgressGroup.visibility = View.GONE
                 binding.livesGroup.visibility = View.GONE
+            }
+            GameMode.EXAM -> {
+                binding.timerGroup.visibility = View.GONE
+                binding.examProgressGroup.visibility = View.VISIBLE
+                binding.livesGroup.visibility = View.GONE
+                binding.tvExamProgress.text = getString(
+                    R.string.exam_progress,
+                    GameManager.questions.size,
+                    GameManager.config.questionCount
+                )
             }
         }
     }
@@ -170,8 +171,15 @@ class GameFragment : Fragment() {
     }
 
     private fun endSession() {
-        countDownTimer?.cancel()
-        navigateToEnd()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.end_session_title)
+            .setMessage(R.string.end_session_confirm)
+            .setPositiveButton(R.string.end) { _, _ ->
+                countDownTimer?.cancel()
+                navigateToEnd()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun navigateToEnd() {
@@ -183,6 +191,5 @@ class GameFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         countDownTimer?.cancel()
-        _binding = null
     }
 }

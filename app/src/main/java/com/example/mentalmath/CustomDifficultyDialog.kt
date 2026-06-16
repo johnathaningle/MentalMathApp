@@ -25,6 +25,7 @@ class CustomDifficultyDialog : DialogFragment() {
         binding.etSmallMax.setText(config.smallNumbers.last.toString())
         binding.etTimeLimit.setText(config.timeLimitSeconds.toString())
         binding.etLives.setText(config.lives.toString())
+        binding.etQuestionCount.setText(config.questionCount.toString())
 
         binding.cbAddition.isChecked = config.operators.contains(Operator.ADDITION)
         binding.cbSubtraction.isChecked = config.operators.contains(Operator.SUBTRACTION)
@@ -35,6 +36,11 @@ class CustomDifficultyDialog : DialogFragment() {
         binding.cbCompound2.isChecked = config.questionTypes.contains(QuestionType.COMPOUND_2)
         binding.cbCompound4.isChecked = config.questionTypes.contains(QuestionType.COMPOUND_4)
         binding.cbPercentage.isChecked = config.questionTypes.contains(QuestionType.PERCENTAGE)
+        binding.cbAppliedProblems.isChecked = config.questionTypes.contains(QuestionType.APPLIED_PROBLEM)
+        binding.cbAlgebra.isChecked = config.questionTypes.contains(QuestionType.ALGEBRA)
+        binding.cbExponentsRoots.isChecked = config.questionTypes.contains(QuestionType.EXPONENTS_ROOTS)
+        binding.cbGeometry.isChecked = config.questionTypes.contains(QuestionType.GEOMETRY)
+        binding.cbNumberTheory.isChecked = config.questionTypes.contains(QuestionType.NUMBER_THEORY)
 
         return AlertDialog.Builder(requireContext())
             .setTitle("Custom Difficulty")
@@ -48,10 +54,11 @@ class CustomDifficultyDialog : DialogFragment() {
                 val smallMax = binding.etSmallMax.text.toString().toIntOrNull()
                 val timeLimit = binding.etTimeLimit.text.toString().toIntOrNull()
                 val lives = binding.etLives.text.toString().toIntOrNull()
+                val questionCount = binding.etQuestionCount.text.toString().toIntOrNull()
 
                 if (basicMin == null || basicMax == null || compMin == null ||
                     compMax == null || smallMin == null || smallMax == null ||
-                    timeLimit == null || lives == null
+                    timeLimit == null || lives == null || questionCount == null
                 ) {
                     Toast.makeText(requireContext(), "Please fill in all fields with valid numbers", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -79,6 +86,11 @@ class CustomDifficultyDialog : DialogFragment() {
                 if (binding.cbCompound2.isChecked) questionTypes.add(QuestionType.COMPOUND_2)
                 if (binding.cbCompound4.isChecked) questionTypes.add(QuestionType.COMPOUND_4)
                 if (binding.cbPercentage.isChecked) questionTypes.add(QuestionType.PERCENTAGE)
+                if (binding.cbAppliedProblems.isChecked) questionTypes.add(QuestionType.APPLIED_PROBLEM)
+                if (binding.cbAlgebra.isChecked) questionTypes.add(QuestionType.ALGEBRA)
+                if (binding.cbExponentsRoots.isChecked) questionTypes.add(QuestionType.EXPONENTS_ROOTS)
+                if (binding.cbGeometry.isChecked) questionTypes.add(QuestionType.GEOMETRY)
+                if (binding.cbNumberTheory.isChecked) questionTypes.add(QuestionType.NUMBER_THEORY)
                 if (questionTypes.isEmpty()) questionTypes.add(QuestionType.BASIC)
 
                 GameManager.config = DifficultyConfig(
@@ -88,7 +100,8 @@ class CustomDifficultyDialog : DialogFragment() {
                     operators = operators,
                     questionTypes = questionTypes,
                     timeLimitSeconds = timeLimit.coerceAtLeast(10),
-                    lives = lives.coerceAtLeast(1)
+                    lives = lives.coerceAtLeast(1),
+                    questionCount = questionCount.coerceAtLeast(1)
                 )
                 GameManager.startGame()
                 findNavController().navigate(R.id.action_HomeFragment_to_GameFragment)

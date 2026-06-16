@@ -10,21 +10,49 @@ enum class Difficulty(val label: String) {
 enum class GameMode(val label: String) {
     TIMED("Timed"),
     ENDLESS("Endless"),
-    SURVIVAL("Survival")
+    SURVIVAL("Survival"),
+    EXAM("Exam")
 }
 
 enum class Operator(val symbol: String) {
     ADDITION("+"),
-    SUBTRACTION("\u2212"),
-    MULTIPLICATION("\u00d7"),
-    DIVISION("\u00f7")
+    SUBTRACTION("−"),
+    MULTIPLICATION("×"),
+    DIVISION("÷")
 }
 
-enum class QuestionType(val label: String) {
-    BASIC("Basic (e.g. 12 + 12)"),
-    COMPOUND_2("2 Operations (e.g. 12 \u00f7 3 + 4)"),
-    COMPOUND_4("4 Operations (e.g. 8 \u00d7 3 + 12 \u00f7 4 \u2212 5)"),
-    PERCENTAGE("Percentages (e.g. 20% of 50)")
+enum class QuestionType(val label: String, val associatedTopic: Topic) {
+    BASIC("Basic (e.g. 12 + 12)", Topic.BASIC),
+    COMPOUND_2("2 Operations (e.g. 12 ÷ 3 + 4)", Topic.COMPOUND),
+    COMPOUND_4("4 Operations (e.g. 8 × 3 + 12 ÷ 4 − 5)", Topic.COMPOUND),
+    PERCENTAGE("Percentages (e.g. 20% of 50)", Topic.PERCENTAGE),
+    APPLIED_PROBLEM("Word Problems", Topic.APPLIED),
+    ALGEBRA("Algebra (Linear Equations)", Topic.ALGEBRA),
+    EXPONENTS_ROOTS("Exponents & Roots", Topic.EXPONENTS_ROOTS),
+    GEOMETRY("Geometry", Topic.GEOMETRY),
+    NUMBER_THEORY("Number Theory", Topic.NUMBER_THEORY)
+}
+
+enum class Topic(val label: String) {
+    BASIC("Basic"),
+    COMPOUND("Compound"),
+    PERCENTAGE("Percentage"),
+    APPLIED("Applied"),
+    ALGEBRA("Algebra"),
+    EXPONENTS_ROOTS("Exponents & Roots"),
+    GEOMETRY("Geometry"),
+    NUMBER_THEORY("Number Theory");
+
+    fun toRetryQuestionType(): QuestionType = when (this) {
+        BASIC -> QuestionType.BASIC
+        COMPOUND -> QuestionType.COMPOUND_2
+        PERCENTAGE -> QuestionType.PERCENTAGE
+        APPLIED -> QuestionType.APPLIED_PROBLEM
+        ALGEBRA -> QuestionType.ALGEBRA
+        EXPONENTS_ROOTS -> QuestionType.EXPONENTS_ROOTS
+        GEOMETRY -> QuestionType.GEOMETRY
+        NUMBER_THEORY -> QuestionType.NUMBER_THEORY
+    }
 }
 
 data class DifficultyConfig(
@@ -34,7 +62,8 @@ data class DifficultyConfig(
     val operators: List<Operator> = listOf(Operator.ADDITION, Operator.SUBTRACTION),
     val questionTypes: List<QuestionType> = listOf(QuestionType.BASIC),
     val timeLimitSeconds: Int = 90,
-    val lives: Int = 5
+    val lives: Int = 5,
+    val questionCount: Int = 15
 )
 
 fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficulty) {
@@ -42,41 +71,43 @@ fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficult
         basicNumbers = 1..20,
         compoundNumbers = 1..10,
         operators = listOf(Operator.ADDITION, Operator.SUBTRACTION),
-        questionTypes = listOf(QuestionType.BASIC),
+        questionTypes = listOf(QuestionType.BASIC, QuestionType.APPLIED_PROBLEM),
         timeLimitSeconds = 90,
-        lives = 5
+        lives = 5,
+        questionCount = 15
     )
     Difficulty.MEDIUM -> DifficultyConfig(
         basicNumbers = 1..50,
         compoundNumbers = 1..20,
         operators = Operator.entries.toList(),
-        questionTypes = listOf(QuestionType.COMPOUND_2, QuestionType.PERCENTAGE),
+        questionTypes = listOf(
+            QuestionType.COMPOUND_2, QuestionType.PERCENTAGE,
+            QuestionType.APPLIED_PROBLEM, QuestionType.NUMBER_THEORY
+        ),
         timeLimitSeconds = 60,
-        lives = 3
+        lives = 3,
+        questionCount = 20
     )
     Difficulty.HARD -> DifficultyConfig(
         basicNumbers = 1..100,
         compoundNumbers = 1..30,
         operators = Operator.entries.toList(),
         questionTypes = listOf(
-            QuestionType.COMPOUND_4, QuestionType.PERCENTAGE
+            QuestionType.COMPOUND_4, QuestionType.PERCENTAGE,
+            QuestionType.ALGEBRA, QuestionType.EXPONENTS_ROOTS,
+            QuestionType.GEOMETRY, QuestionType.NUMBER_THEORY
         ),
         timeLimitSeconds = 45,
-        lives = 2
+        lives = 2,
+        questionCount = 25
     )
-    Difficulty.CUSTOM -> DifficultyConfig(
-        basicNumbers = 1..20,
-        compoundNumbers = 1..20,
-        operators = listOf(Operator.ADDITION, Operator.SUBTRACTION),
-        questionTypes = listOf(QuestionType.BASIC),
-        timeLimitSeconds = 90,
-        lives = 5
-    )
+    Difficulty.CUSTOM -> getDefaultConfig(Difficulty.EASY)
 }
 
 data class Question(
     val displayText: String,
-    val correctAnswer: Int
+    val correctAnswer: Int,
+    val topic: Topic
 )
 
 data class QuestionResult(

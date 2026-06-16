@@ -10,6 +10,7 @@
     <string name="timed">Timed</string>
     <string name="endless">Endless</string>
     <string name="survival">Survival</string>
+    <string name="exam">Exam</string>
     <string name="start_game">Start Game</string>
     <string name="statistics_title">Statistics</string>
     <string name="stats_games_played">Games Played: %d</string>
@@ -37,6 +38,10 @@
     <string name="feedback_correct">✓ Correct!</string>
     <string name="feedback_wrong">✗ Wrong! Answer: %d</string>
     <string name="end_session">End Session</string>
+    <string name="end_session_title">End Session</string>
+    <string name="end_session_confirm">Are you sure you want to end this session?\nYour progress will be saved.</string>
+    <string name="end">End</string>
+    <string name="cancel">Cancel</string>
     <string name="number_range">Number Range</string>
     <string name="min">Min</string>
     <string name="max">Max</string>
@@ -60,4 +65,19 @@
     <string name="basic_number_range">Basic Number Range</string>
     <string name="compound_number_range">Compound Number Range</string>
     <string name="small_number_range">Small Number Range (×, ÷ operands)</string>
+    <string name="exam_progress">%1$d / %2$d</string>
+    <string name="answer_review_title">Answer Review</string>
+    <string name="your_answer">Your answer: %d</string>
+    <string name="correct_answer">Correct: %d</string>
+    <string name="review_correct">✓</string>
+    <string name="review_wrong">✗</string>
+    <string name="retry_missed">Retry Missed</string>
+    <string name="share_results">Share Results</string>
+    <string name="applied_problem_questions">Word Problems</string>
+    <string name="algebra_questions">Algebra (Linear Equations)</string>
+    <string name="exponents_roots_questions">Exponents &amp; Roots</string>
+    <string name="geometry_questions">Geometry</string>
+    <string name="number_theory_questions">Number Theory</string>
+    <string name="exam_settings">Exam Mode Settings</string>
+    <string name="question_count">Question Count</string>
 </resources>
