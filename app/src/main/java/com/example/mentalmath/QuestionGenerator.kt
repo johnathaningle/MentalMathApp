@@ -200,17 +200,11 @@ class AppliedProblemGenerator : QuestionGenerator {
                 Question("How many inches are in $feet feet?", feet * 12, Topic.APPLIED)
             },
             {
-                var avg = 0; var aa = 0; var bb = 0; var cc = 0
-                while (true) {
-                    aa = (10..100).random()
-                    bb = (10..100).random()
-                    cc = (10..100).random()
-                    val sum = aa + bb + cc
-                    if (sum % 3 == 0) {
-                        avg = sum / 3
-                        break
-                    }
-                }
+                val avg = (10..100).random()
+                val total = avg * 3
+                val aa = (maxOf(10, total - 200)..minOf(100, total - 20)).random()
+                val bb = (maxOf(10, total - aa - 100)..minOf(100, total - aa - 10)).random()
+                val cc = total - aa - bb
                 Question(
                     "John scored $aa, $bb, and $cc on three tests. What is his average?",
                     avg, Topic.APPLIED
