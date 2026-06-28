@@ -42,7 +42,7 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         }
         updateHUD()
 
-        val question = GameManager.generateQuestion()
+        val question = GameManager.getNextQuestion() ?: run { navigateToEnd(); return }
         binding.tvQuestion.text = question.displayText
         binding.etAnswer.text.clear()
         binding.etAnswer.isEnabled = true
@@ -142,6 +142,16 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
                     R.string.exam_progress,
                     GameManager.questions.size,
                     GameManager.config.questionCount
+                )
+            }
+            GameMode.RETRY -> {
+                binding.timerGroup.visibility = View.GONE
+                binding.examProgressGroup.visibility = View.VISIBLE
+                binding.livesGroup.visibility = View.GONE
+                binding.tvExamProgress.text = getString(
+                    R.string.exam_progress,
+                    GameManager.questions.size,
+                    GameManager.retryQuestions.size
                 )
             }
         }

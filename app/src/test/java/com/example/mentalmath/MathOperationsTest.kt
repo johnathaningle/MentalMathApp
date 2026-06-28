@@ -105,7 +105,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(200) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertTrue(q.displayText.contains("+"))
             val (a, b) = extractTwoNumbers(q.displayText, "+")
             assertEquals(a + b, q.correctAnswer)
@@ -123,7 +123,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(200) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertTrue(q.displayText.contains("−"))
             val (a, b) = extractTwoNumbers(q.displayText, "−")
             assertTrue("a ($a) must be >= b ($b) for non-negative result", a >= b)
@@ -142,7 +142,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(200) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertTrue(q.displayText.contains("×"))
             val (a, b) = extractTwoNumbers(q.displayText, "×")
             assertTrue("a ($a) should be in small range 2..12", a in 2..12)
@@ -162,7 +162,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(200) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertTrue(q.displayText.contains("÷"))
             val (a, b) = extractTwoNumbers(q.displayText, "÷")
             assertTrue("b ($b) must be in small range 2..12", b in 2..12)
@@ -182,7 +182,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(500) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertEquals(
                 "Incorrect evaluation for: ${q.displayText}",
                 evaluateExpression(q.displayText),
@@ -200,7 +200,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(500) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertTrue(
                 "Compound 2 answer was negative: ${q.correctAnswer} for '${q.displayText}'",
                 q.correctAnswer >= 0
@@ -219,7 +219,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(500) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertEquals(
                 "Incorrect evaluation for: ${q.displayText}",
                 evaluateExpression(q.displayText),
@@ -237,7 +237,7 @@ class MathOperationsTest {
             smallNumbers = 2..12
         )
         repeat(500) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertTrue(
                 "Compound 4 answer was negative: ${q.correctAnswer} for '${q.displayText}'",
                 q.correctAnswer >= 0
@@ -254,7 +254,7 @@ class MathOperationsTest {
             questionTypes = listOf(QuestionType.PERCENTAGE)
         )
         repeat(200) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             assertTrue("Missing % in: ${q.displayText}", q.displayText.contains("%"))
             assertTrue("Answer must be non-negative", q.correctAnswer >= 0)
 
@@ -272,7 +272,7 @@ class MathOperationsTest {
             questionTypes = listOf(QuestionType.PERCENTAGE)
         )
         repeat(200) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             val match = Regex("""What is (\d+)% of (\d+)\?""").find(q.displayText)!!
             val pct = match.groupValues[1].toInt()
             val number = match.groupValues[2].toInt()
@@ -313,13 +313,13 @@ class MathOperationsTest {
             basicNumbers = 10..10
         )
 
-        var q = GameManager.generateQuestion()
+        var q = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q.correctAnswer)
         assertEquals(10, GameManager.score)
         assertEquals(1, GameManager.streak)
         assertEquals(1, GameManager.bestStreak)
 
-        q = GameManager.generateQuestion()
+        q = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q.correctAnswer)
         assertEquals(10 + 11, GameManager.score)
         assertEquals(2, GameManager.streak)
@@ -335,11 +335,11 @@ class MathOperationsTest {
             basicNumbers = 10..10
         )
 
-        val q = GameManager.generateQuestion()
+        val q = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q.correctAnswer)
         assertEquals(1, GameManager.streak)
 
-        val q2 = GameManager.generateQuestion()
+        val q2 = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q2.correctAnswer + 1)
         assertEquals(0, GameManager.streak)
         assertEquals(4, GameManager.lives)
@@ -354,13 +354,13 @@ class MathOperationsTest {
             basicNumbers = 10..10
         )
 
-        val q = GameManager.generateQuestion()
+        val q = GameManager.getNextQuestion()!!
         val wrong = GameManager.submitAnswer(q.correctAnswer + 1)
         assertFalse(wrong.isCorrect)
         assertEquals(q.correctAnswer + 1, wrong.userAnswer)
         assertEquals(q, wrong.question)
 
-        val q2 = GameManager.generateQuestion()
+        val q2 = GameManager.getNextQuestion()!!
         val right = GameManager.submitAnswer(q2.correctAnswer)
         assertTrue(right.isCorrect)
         assertEquals(q2.correctAnswer, right.userAnswer)
@@ -375,7 +375,7 @@ class MathOperationsTest {
             basicNumbers = 10..10
         )
 
-        val q = GameManager.generateQuestion()
+        val q = GameManager.getNextQuestion()!!
         assertNotNull(GameManager.currentQuestion())
         GameManager.submitAnswer(q.correctAnswer)
         assertNull(GameManager.currentQuestion())
@@ -401,7 +401,7 @@ class MathOperationsTest {
         GameManager.difficulty = Difficulty.EASY
         GameManager.gameMode = GameMode.ENDLESS
         GameManager.startGame()
-        val q = GameManager.generateQuestion()
+        val q = GameManager.getNextQuestion()!!
         assertNotNull(q)
         val result = GameManager.submitAnswer(q.correctAnswer + 1)
         assertFalse(result.isCorrect)
@@ -456,13 +456,13 @@ class MathOperationsTest {
             lives = 5
         )
 
-        val q1 = GameManager.generateQuestion()
+        val q1 = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q1.correctAnswer)
 
-        val q2 = GameManager.generateQuestion()
+        val q2 = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q2.correctAnswer + 1)
 
-        val q3 = GameManager.generateQuestion()
+        val q3 = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q3.correctAnswer)
 
         val result = GameManager.getGameResult()
@@ -484,14 +484,14 @@ class MathOperationsTest {
         )
 
         repeat(3) {
-            val q = GameManager.generateQuestion()
+            val q = GameManager.getNextQuestion()!!
             GameManager.submitAnswer(q.correctAnswer)
         }
 
-        val q = GameManager.generateQuestion()
+        val q = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q.correctAnswer + 1)
 
-        val q2 = GameManager.generateQuestion()
+        val q2 = GameManager.getNextQuestion()!!
         GameManager.submitAnswer(q2.correctAnswer)
 
         val result = GameManager.getGameResult()
