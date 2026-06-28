@@ -11,7 +11,8 @@ enum class GameMode(val label: String) {
     TIMED("Timed"),
     ENDLESS("Endless"),
     SURVIVAL("Survival"),
-    EXAM("Exam")
+    EXAM("Exam"),
+    RETRY("Retry Missed")
 }
 
 enum class Operator(val symbol: String) {
@@ -43,16 +44,6 @@ enum class Topic(val label: String) {
     GEOMETRY("Geometry"),
     NUMBER_THEORY("Number Theory");
 
-    fun toRetryQuestionType(): QuestionType = when (this) {
-        BASIC -> QuestionType.BASIC
-        COMPOUND -> QuestionType.COMPOUND_2
-        PERCENTAGE -> QuestionType.PERCENTAGE
-        APPLIED -> QuestionType.APPLIED_PROBLEM
-        ALGEBRA -> QuestionType.ALGEBRA
-        EXPONENTS_ROOTS -> QuestionType.EXPONENTS_ROOTS
-        GEOMETRY -> QuestionType.GEOMETRY
-        NUMBER_THEORY -> QuestionType.NUMBER_THEORY
-    }
 }
 
 data class DifficultyConfig(
