@@ -42,10 +42,7 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         }
         updateHUD()
 
-        val question = when (GameManager.gameMode) {
-            GameMode.RETRY -> GameManager.getNextRetryQuestion()
-            else -> GameManager.generateQuestion()
-        } ?: run { navigateToEnd(); return }
+        val question = GameManager.getNextQuestion() ?: run { navigateToEnd(); return }
         binding.tvQuestion.text = question.displayText
         binding.etAnswer.text.clear()
         binding.etAnswer.isEnabled = true

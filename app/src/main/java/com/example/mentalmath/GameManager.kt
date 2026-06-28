@@ -5,7 +5,10 @@ object GameManager {
     const val STREAK_OFFSET = 1
 
     var difficulty: Difficulty = Difficulty.EASY
-    var gameMode: GameMode = GameMode.ENDLESS
+    private var _gameMode: GameMode = GameMode.ENDLESS
+    var gameMode: GameMode
+        get() = if (retryQuestions.isNotEmpty()) GameMode.RETRY else _gameMode
+        set(value) { _gameMode = value }
     var config: DifficultyConfig = getDefaultConfig(Difficulty.EASY)
     var score: Int = 0
     var streak: Int = 0
@@ -18,7 +21,6 @@ object GameManager {
 
     var retryQuestions: List<Question> = emptyList()
     var retryIndex: Int = 0
-    var previousGameMode: GameMode = GameMode.ENDLESS
 
     private var currentQ: Question? = null
 
@@ -39,20 +41,21 @@ object GameManager {
         remainingTimeMs = config.timeLimitSeconds * 1000L
         gameStartTime = System.currentTimeMillis()
         currentQ = null
+        retryQuestions = emptyList()
+        retryIndex = 0
     }
 
-    fun generateQuestion(): Question {
+    fun getNextQuestion(): Question? {
+        if (retryQuestions.isNotEmpty()) {
+            if (retryIndex >= retryQuestions.size) return null
+            val q = retryQuestions[retryIndex]
+            retryIndex++
+            currentQ = q
+            questionStartTime = System.currentTimeMillis()
+            return q
+        }
         val type = config.questionTypes.random()
         val q = QuestionGenerators.generate(type, config)
-        currentQ = q
-        questionStartTime = System.currentTimeMillis()
-        return q
-    }
-
-    fun getNextRetryQuestion(): Question? {
-        if (retryIndex >= retryQuestions.size) return null
-        val q = retryQuestions[retryIndex]
-        retryIndex++
         currentQ = q
         questionStartTime = System.currentTimeMillis()
         return q
@@ -100,13 +103,8 @@ object GameManager {
     }
 
     fun startRetryGame(missedQuestions: List<Question>) {
-        if (gameMode != GameMode.RETRY) {
-            previousGameMode = gameMode
-        }
         resetGameState()
         retryQuestions = missedQuestions.toList()
         retryIndex = 0
-        gameMode = GameMode.RETRY
     }
-
 }

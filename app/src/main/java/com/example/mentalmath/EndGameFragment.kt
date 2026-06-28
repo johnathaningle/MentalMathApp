@@ -50,9 +50,6 @@ class EndGameFragment : BindingFragment<FragmentEndGameBinding>(FragmentEndGameB
         }
 
         binding.btnPlayAgain.setOnClickListener {
-            if (GameManager.gameMode == GameMode.RETRY) {
-                GameManager.gameMode = GameManager.previousGameMode
-            }
             GameManager.startGame()
             findNavController().navigate(R.id.action_EndGameFragment_to_GameFragment)
         }
