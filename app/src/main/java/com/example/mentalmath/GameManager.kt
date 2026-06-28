@@ -5,7 +5,10 @@ object GameManager {
     const val STREAK_OFFSET = 1
 
     var difficulty: Difficulty = Difficulty.EASY
-    var gameMode: GameMode = GameMode.ENDLESS
+    private var _gameMode: GameMode = GameMode.ENDLESS
+    var gameMode: GameMode
+        get() = if (retryQuestions.isNotEmpty()) GameMode.RETRY else _gameMode
+        set(value) { _gameMode = value }
     var config: DifficultyConfig = getDefaultConfig(Difficulty.EASY)
     var score: Int = 0
     var streak: Int = 0
@@ -16,9 +19,16 @@ object GameManager {
     var gameStartTime: Long = 0L
     var remainingTimeMs: Long = 0L
 
+    var retryQuestions: List<Question> = emptyList()
+    var retryIndex: Int = 0
+
     private var currentQ: Question? = null
 
     fun startGame() {
+        resetGameState()
+    }
+
+    private fun resetGameState() {
         config = when (difficulty) {
             Difficulty.CUSTOM -> config
             else -> getDefaultConfig(difficulty)
@@ -31,9 +41,19 @@ object GameManager {
         remainingTimeMs = config.timeLimitSeconds * 1000L
         gameStartTime = System.currentTimeMillis()
         currentQ = null
+        retryQuestions = emptyList()
+        retryIndex = 0
     }
 
-    fun generateQuestion(): Question {
+    fun getNextQuestion(): Question? {
+        if (retryQuestions.isNotEmpty()) {
+            if (retryIndex >= retryQuestions.size) return null
+            val q = retryQuestions[retryIndex]
+            retryIndex++
+            currentQ = q
+            questionStartTime = System.currentTimeMillis()
+            return q
+        }
         val type = config.questionTypes.random()
         val q = QuestionGenerators.generate(type, config)
         currentQ = q
@@ -70,6 +90,7 @@ object GameManager {
         GameMode.SURVIVAL -> lives <= 0
         GameMode.ENDLESS -> false
         GameMode.EXAM -> questions.size >= config.questionCount
+        GameMode.RETRY -> retryIndex >= retryQuestions.size
     }
 
     fun getGameResult(): GameResult {
@@ -81,14 +102,9 @@ object GameManager {
         )
     }
 
-    fun startRetryGame(missedTopics: Set<Topic>) {
-        val types = missedTopics.map { it.toRetryQuestionType() }
-        if (types.isNotEmpty()) {
-            config = config.copy(questionTypes = types)
-        }
-        startGame()
+    fun startRetryGame(missedQuestions: List<Question>) {
+        resetGameState()
+        retryQuestions = missedQuestions.toList()
+        retryIndex = 0
     }
-
-    fun getMissedTopics(): Set<Topic> =
-        questions.filter { !it.isCorrect }.map { it.question.topic }.toSet()
 }

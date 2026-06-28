@@ -38,8 +38,10 @@ class EndGameFragment : BindingFragment<FragmentEndGameBinding>(FragmentEndGameB
         }
 
         binding.btnRetryMissed.setOnClickListener {
-            val missedTopics = GameManager.getMissedTopics()
-            GameManager.startRetryGame(missedTopics)
+            val missedQuestions = GameManager.questions
+                .filter { !it.isCorrect }
+                .map { it.question }
+            GameManager.startRetryGame(missedQuestions)
             findNavController().navigate(R.id.action_EndGameFragment_to_GameFragment)
         }
 
