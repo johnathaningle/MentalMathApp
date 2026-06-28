@@ -16,9 +16,17 @@ object GameManager {
     var gameStartTime: Long = 0L
     var remainingTimeMs: Long = 0L
 
+    var retryQuestions: List<Question> = emptyList()
+    var retryIndex: Int = 0
+    var previousGameMode: GameMode = GameMode.ENDLESS
+
     private var currentQ: Question? = null
 
     fun startGame() {
+        resetGameState()
+    }
+
+    private fun resetGameState() {
         config = when (difficulty) {
             Difficulty.CUSTOM -> config
             else -> getDefaultConfig(difficulty)
@@ -36,6 +44,15 @@ object GameManager {
     fun generateQuestion(): Question {
         val type = config.questionTypes.random()
         val q = QuestionGenerators.generate(type, config)
+        currentQ = q
+        questionStartTime = System.currentTimeMillis()
+        return q
+    }
+
+    fun getNextRetryQuestion(): Question? {
+        if (retryIndex >= retryQuestions.size) return null
+        val q = retryQuestions[retryIndex]
+        retryIndex++
         currentQ = q
         questionStartTime = System.currentTimeMillis()
         return q
@@ -70,6 +87,7 @@ object GameManager {
         GameMode.SURVIVAL -> lives <= 0
         GameMode.ENDLESS -> false
         GameMode.EXAM -> questions.size >= config.questionCount
+        GameMode.RETRY -> retryIndex >= retryQuestions.size
     }
 
     fun getGameResult(): GameResult {
@@ -81,14 +99,14 @@ object GameManager {
         )
     }
 
-    fun startRetryGame(missedTopics: Set<Topic>) {
-        val types = missedTopics.map { it.toRetryQuestionType() }
-        if (types.isNotEmpty()) {
-            config = config.copy(questionTypes = types)
+    fun startRetryGame(missedQuestions: List<Question>) {
+        if (gameMode != GameMode.RETRY) {
+            previousGameMode = gameMode
         }
-        startGame()
+        resetGameState()
+        retryQuestions = missedQuestions.toList()
+        retryIndex = 0
+        gameMode = GameMode.RETRY
     }
 
-    fun getMissedTopics(): Set<Topic> =
-        questions.filter { !it.isCorrect }.map { it.question.topic }.toSet()
 }
