@@ -62,7 +62,7 @@ fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficult
         basicNumbers = 1..20,
         compoundNumbers = 1..10,
         operators = listOf(Operator.ADDITION, Operator.SUBTRACTION),
-        questionTypes = listOf(QuestionType.BASIC, QuestionType.APPLIED_PROBLEM),
+        questionTypes = listOf(QuestionType.BASIC, QuestionType.COMPOUND_2),
         timeLimitSeconds = 90,
         lives = 5,
         questionCount = 15
@@ -72,21 +72,22 @@ fun getDefaultConfig(difficulty: Difficulty): DifficultyConfig = when (difficult
         compoundNumbers = 1..20,
         operators = Operator.entries.toList(),
         questionTypes = listOf(
-            QuestionType.COMPOUND_2, QuestionType.PERCENTAGE,
-            QuestionType.APPLIED_PROBLEM, QuestionType.NUMBER_THEORY
+            QuestionType.COMPOUND_4, QuestionType.PERCENTAGE,
+            QuestionType.ALGEBRA
         ),
         timeLimitSeconds = 60,
         lives = 3,
         questionCount = 20
     )
     Difficulty.HARD -> DifficultyConfig(
-        basicNumbers = 1..100,
-        compoundNumbers = 1..30,
+        basicNumbers = 1..150,
+        compoundNumbers = 1..50,
         operators = Operator.entries.toList(),
         questionTypes = listOf(
             QuestionType.COMPOUND_4, QuestionType.PERCENTAGE,
-            QuestionType.ALGEBRA, QuestionType.EXPONENTS_ROOTS,
-            QuestionType.GEOMETRY, QuestionType.NUMBER_THEORY
+            QuestionType.APPLIED_PROBLEM, QuestionType.ALGEBRA,
+            QuestionType.EXPONENTS_ROOTS, QuestionType.GEOMETRY,
+            QuestionType.NUMBER_THEORY
         ),
         timeLimitSeconds = 45,
         lives = 2,
