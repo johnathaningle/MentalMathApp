@@ -20,3 +20,4 @@
 signing.properties
 local.gradle
 .kotlin
+.opencode

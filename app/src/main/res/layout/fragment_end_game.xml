@@ -64,10 +64,13 @@
 
                 <TextView
                     android:id="@+id/tvScoreValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvScoreLabel"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="150" />
 
@@ -84,10 +87,14 @@
 
                 <TextView
                     android:id="@+id/tvCorrectValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvCorrectLabel"
                     app:layout_constraintTop_toBottomOf="@id/tvScoreValue"
                     tools:text="15 / 20" />
 
@@ -104,10 +111,14 @@
 
                 <TextView
                     android:id="@+id/tvAccuracyValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvAccuracyLabel"
                     app:layout_constraintTop_toBottomOf="@id/tvCorrectValue"
                     tools:text="75.0%" />
 
@@ -124,10 +135,14 @@
 
                 <TextView
                     android:id="@+id/tvAvgTimeValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvAvgTimeLabel"
                     app:layout_constraintTop_toBottomOf="@id/tvAccuracyValue"
                     tools:text="3.2s" />
 
@@ -144,10 +159,14 @@
 
                 <TextView
                     android:id="@+id/tvBestStreakValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvBestStreakLabel"
                     app:layout_constraintTop_toBottomOf="@id/tvAvgTimeValue"
                     tools:text="8" />
 
@@ -164,10 +183,14 @@
 
                 <TextView
                     android:id="@+id/tvDifficultyValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvDifficultyLabel"
                     app:layout_constraintTop_toBottomOf="@id/tvBestStreakValue"
                     tools:text="Hard" />
 
@@ -184,10 +207,14 @@
 
                 <TextView
                     android:id="@+id/tvModeValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:layout_marginStart="8dp"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tvModeLabel"
                     app:layout_constraintTop_toBottomOf="@id/tvDifficultyValue"
                     tools:text="Survival" />
 
