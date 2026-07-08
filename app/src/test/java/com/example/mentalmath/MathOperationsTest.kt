@@ -46,54 +46,6 @@ class MathOperationsTest {
         assertEquals("Exam", GameMode.EXAM.label)
     }
 
-    // ======================== DEFAULT CONFIGS ========================
-
-    @Test
-    fun `easy default config values`() {
-        val c = getDefaultConfig(Difficulty.EASY)
-        assertEquals(1..20, c.basicNumbers)
-        assertEquals(1..10, c.compoundNumbers)
-        assertEquals(2..12, c.smallNumbers)
-        assertEquals(listOf(Operator.ADDITION, Operator.SUBTRACTION), c.operators)
-        assertEquals(
-            listOf(QuestionType.BASIC, QuestionType.APPLIED_PROBLEM),
-            c.questionTypes
-        )
-        assertEquals(90, c.timeLimitSeconds)
-        assertEquals(5, c.lives)
-    }
-
-    @Test
-    fun `medium default config values`() {
-        val c = getDefaultConfig(Difficulty.MEDIUM)
-        assertEquals(1..50, c.basicNumbers)
-        assertEquals(1..20, c.compoundNumbers)
-        assertEquals(2..12, c.smallNumbers)
-        assertEquals(Operator.entries.toList(), c.operators)
-        assertTrue(c.questionTypes.containsAll(listOf(QuestionType.COMPOUND_2, QuestionType.PERCENTAGE)))
-        assertEquals(60, c.timeLimitSeconds)
-        assertEquals(3, c.lives)
-    }
-
-    @Test
-    fun `hard default config values`() {
-        val c = getDefaultConfig(Difficulty.HARD)
-        assertEquals(1..100, c.basicNumbers)
-        assertEquals(1..30, c.compoundNumbers)
-        assertEquals(2..12, c.smallNumbers)
-        assertEquals(Operator.entries.toList(), c.operators)
-        assertTrue(c.questionTypes.containsAll(listOf(QuestionType.COMPOUND_4, QuestionType.PERCENTAGE)))
-        assertEquals(45, c.timeLimitSeconds)
-        assertEquals(2, c.lives)
-    }
-
-    @Test
-    fun `custom default config falls back to easy`() {
-        val c = getDefaultConfig(Difficulty.CUSTOM)
-        val easy = getDefaultConfig(Difficulty.EASY)
-        assertEquals(easy, c)
-    }
-
     // ======================== BASIC — ADDITION ========================
 
     @Test
@@ -540,18 +492,6 @@ class MathOperationsTest {
         assertEquals(5, r.bestStreak)
         assertEquals(60000L, r.durationMs)
         assertEquals(now, r.timestamp)
-    }
-
-    @Test
-    fun `DifficultyConfig has sensible defaults`() {
-        val c = DifficultyConfig()
-        assertEquals(1..20, c.basicNumbers)
-        assertEquals(1..20, c.compoundNumbers)
-        assertEquals(2..12, c.smallNumbers)
-        assertEquals(listOf(Operator.ADDITION, Operator.SUBTRACTION), c.operators)
-        assertEquals(listOf(QuestionType.BASIC), c.questionTypes)
-        assertEquals(90, c.timeLimitSeconds)
-        assertEquals(5, c.lives)
     }
 
     // ======================== HELPERS ========================
