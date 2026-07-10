@@ -1,4 +1,9 @@
-# MentalMath
+<p align="center">
+  <img src="images/icon.png" width="128" alt="MentalMath icon"/>
+</p>
+
+# MentalMath 
+[![CI](https://github.com/johnathaningle/MentalMathApp/actions/workflows/ci.yml/badge.svg)](https://github.com/johnathaningle/MentalMathApp/actions/workflows/ci.yml)
 
 Android app for practicing mental arithmetic. Pick a difficulty and game mode, then answer questions until time runs out or you run out of lives.
 
