@@ -28,6 +28,7 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         }
 
         binding.btnSubmit.setOnClickListener { handleSubmit() }
+        binding.btnSkip.setOnClickListener { handleSkip() }
         binding.btnEndSession.setOnClickListener { endSession() }
     }
 
@@ -47,12 +48,14 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         binding.etAnswer.text.clear()
         binding.etAnswer.isEnabled = true
         binding.btnSubmit.isEnabled = true
+        binding.btnSkip.isEnabled = true
         binding.etAnswer.requestFocus()
         isShowingFeedback = false
 
         binding.ivFeedback.setImageDrawable(null)
         binding.etAnswer.visibility = View.VISIBLE
         binding.btnSubmit.visibility = View.VISIBLE
+        binding.btnSkip.visibility = View.VISIBLE
         binding.tvFeedback.visibility = View.GONE
     }
 
@@ -77,6 +80,18 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         showFeedback(result)
     }
 
+    private fun handleSkip() {
+        if (isShowingFeedback) {
+            showNextQuestion()
+            return
+        }
+        binding.etAnswer.isEnabled = false
+        binding.btnSubmit.isEnabled = false
+        binding.btnSkip.isEnabled = false
+        val result = GameManager.skipAnswer()
+        showNextQuestion()
+    }
+
     private fun showFeedback(result: QuestionResult) {
         isShowingFeedback = true
 
@@ -95,6 +110,7 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
 
         binding.etAnswer.visibility = View.GONE
         binding.btnSubmit.visibility = View.GONE
+        binding.btnSkip.visibility = View.GONE
         binding.tvFeedback.visibility = View.VISIBLE
 
         binding.btnSubmit.text = getString(R.string.next_question)

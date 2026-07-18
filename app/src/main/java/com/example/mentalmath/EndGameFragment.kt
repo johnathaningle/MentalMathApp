@@ -32,14 +32,14 @@ class EndGameFragment : BindingFragment<FragmentEndGameBinding>(FragmentEndGameB
             binding.rvAnswerReview.adapter = QuestionReviewAdapter(questions)
         }
 
-        val missedCount = questions.count { !it.isCorrect }
+        val missedCount = questions.count { !it.isCorrect && !it.isSkipped }
         if (missedCount == 0) {
             binding.btnRetryMissed.visibility = View.GONE
         }
 
         binding.btnRetryMissed.setOnClickListener {
             val missedQuestions = GameManager.questions
-                .filter { !it.isCorrect }
+                .filter { !it.isCorrect && !it.isSkipped }
                 .map { it.question }
             GameManager.startRetryGame(missedQuestions)
             findNavController().navigate(R.id.action_EndGameFragment_to_GameFragment)
@@ -72,10 +72,16 @@ class EndGameFragment : BindingFragment<FragmentEndGameBinding>(FragmentEndGameB
         sb.appendLine()
 
         for ((i, qr) in questions.withIndex()) {
-            val mark = if (qr.isCorrect) "\u2713" else "\u2717"
+            val mark = when {
+                qr.isCorrect -> "\u2713"
+                qr.isSkipped -> "\u2192"
+                else -> "\u2717"
+            }
             sb.appendLine("${i + 1}. ${qr.question.displayText} $mark")
-            sb.appendLine("   Your answer: ${qr.userAnswer ?: "—"}")
-            if (!qr.isCorrect) {
+            if (!qr.isSkipped) {
+                sb.appendLine("   Your answer: ${qr.userAnswer ?: "—"}")
+            }
+            if (!qr.isCorrect && !qr.isSkipped) {
                 sb.appendLine("   Correct: ${qr.question.correctAnswer}")
             }
         }
