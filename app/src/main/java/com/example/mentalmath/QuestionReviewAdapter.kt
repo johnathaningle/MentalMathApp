@@ -24,6 +24,12 @@ class QuestionReviewAdapter(
                     binding.root.context.getColor(android.R.color.holo_green_dark)
                 )
                 binding.tvReviewCorrectAnswer.visibility = View.GONE
+            } else if (result.isSkipped) {
+                binding.tvReviewStatus.text = "\u2192"
+                binding.tvReviewStatus.setTextColor(
+                    binding.root.context.getColor(android.R.color.darker_gray)
+                )
+                binding.tvReviewCorrectAnswer.visibility = View.GONE
             } else {
                 binding.tvReviewStatus.text = "\u2717"
                 binding.tvReviewStatus.setTextColor(

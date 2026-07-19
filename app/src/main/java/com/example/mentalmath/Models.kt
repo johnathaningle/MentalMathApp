@@ -106,7 +106,8 @@ data class QuestionResult(
     val question: Question,
     val userAnswer: Int?,
     val isCorrect: Boolean,
-    val timeTakenMs: Long
+    val timeTakenMs: Long,
+    val isSkipped: Boolean = false
 )
 
 data class GameResult(

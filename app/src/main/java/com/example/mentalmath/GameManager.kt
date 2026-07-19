@@ -63,6 +63,16 @@ object GameManager {
 
     fun currentQuestion(): Question? = currentQ
 
+    fun skipAnswer(): QuestionResult {
+        val question = currentQ ?: return QuestionResult(
+            Question("", 0, Topic.BASIC), 0, false, 0, isSkipped = true
+        )
+        val result = QuestionResult(question, null, false, 0, isSkipped = true)
+        questions.add(result)
+        currentQ = null
+        return result
+    }
+
     fun submitAnswer(userAnswer: Int): QuestionResult {
         val question = currentQ ?: return QuestionResult(
             Question("", 0, Topic.BASIC), userAnswer, false, 0

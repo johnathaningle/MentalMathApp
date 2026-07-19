@@ -34,6 +34,7 @@
     <string name="timer_display">%1$d:%2$02d</string>
     <string name="answer_hint">Type your answer</string>
     <string name="submit">Submit</string>
+    <string name="skip">Skip</string>
     <string name="next_question">Next</string>
     <string name="feedback_correct">✓ Correct!</string>
     <string name="feedback_wrong">✗ Wrong! Answer: %d</string>
