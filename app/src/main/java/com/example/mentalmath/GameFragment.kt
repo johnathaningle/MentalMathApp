@@ -98,14 +98,14 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         if (result.isCorrect) {
             binding.ivFeedback.setImageResource(android.R.drawable.ic_menu_edit)
             binding.tvFeedback.text = getString(R.string.feedback_correct)
-            binding.tvFeedback.setTextColor(requireContext().getColor(android.R.color.holo_green_dark))
+            binding.tvFeedback.setTextColor(requireContext().getThemeColor(androidx.appcompat.R.attr.colorPrimary))
         } else {
             binding.ivFeedback.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
             binding.tvFeedback.text = getString(
                 R.string.feedback_wrong,
                 result.question.correctAnswer
             )
-            binding.tvFeedback.setTextColor(requireContext().getColor(android.R.color.holo_red_dark))
+            binding.tvFeedback.setTextColor(requireContext().getThemeColor(androidx.appcompat.R.attr.colorError))
         }
 
         binding.etAnswer.visibility = View.GONE
