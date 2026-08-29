@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.R as AppCompatR
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mentalmath.databinding.ItemQuestionReviewBinding
+import com.google.android.material.R as MaterialR
 
 class QuestionReviewAdapter(
     private val results: List<QuestionResult>
@@ -21,19 +23,19 @@ class QuestionReviewAdapter(
             if (result.isCorrect) {
                 binding.tvReviewStatus.text = "\u2713"
                 binding.tvReviewStatus.setTextColor(
-                    binding.root.context.getColor(android.R.color.holo_green_dark)
+                    binding.root.context.getThemeColor(AppCompatR.attr.colorPrimary)
                 )
                 binding.tvReviewCorrectAnswer.visibility = View.GONE
             } else if (result.isSkipped) {
                 binding.tvReviewStatus.text = "\u2192"
                 binding.tvReviewStatus.setTextColor(
-                    binding.root.context.getColor(android.R.color.darker_gray)
+                    binding.root.context.getThemeColor(MaterialR.attr.colorOutline)
                 )
                 binding.tvReviewCorrectAnswer.visibility = View.GONE
             } else {
                 binding.tvReviewStatus.text = "\u2717"
                 binding.tvReviewStatus.setTextColor(
-                    binding.root.context.getColor(android.R.color.holo_red_dark)
+                    binding.root.context.getThemeColor(AppCompatR.attr.colorError)
                 )
                 binding.tvReviewCorrectAnswer.text = "Correct: ${result.question.correctAnswer}"
                 binding.tvReviewCorrectAnswer.visibility = View.VISIBLE
