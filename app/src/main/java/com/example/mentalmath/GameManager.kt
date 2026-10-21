@@ -45,6 +45,14 @@ object GameManager {
         retryIndex = 0
     }
 
+    // mid-game config swap keeps score/streak; startGame() if a full reset is ever wanted
+    fun applyCustomConfig(newConfig: DifficultyConfig): Boolean {
+        val changed = difficulty != Difficulty.CUSTOM || config != newConfig
+        difficulty = Difficulty.CUSTOM
+        config = newConfig
+        return changed
+    }
+
     fun getNextQuestion(): Question? {
         if (retryQuestions.isNotEmpty()) {
             if (retryIndex >= retryQuestions.size) return null

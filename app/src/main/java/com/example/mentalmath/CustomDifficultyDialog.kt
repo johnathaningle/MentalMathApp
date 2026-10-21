@@ -2,6 +2,7 @@ package com.example.mentalmath
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -12,6 +13,9 @@ class CustomDifficultyDialog : DialogFragment() {
 
     private var _binding: DialogCustomDifficultyBinding? = null
     private val binding get() = _binding!!
+
+    // set when opened mid-game: apply config in place instead of starting a new game
+    var onApply: ((DifficultyConfig) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = DialogCustomDifficultyBinding.inflate(layoutInflater)
@@ -42,10 +46,20 @@ class CustomDifficultyDialog : DialogFragment() {
         binding.cbGeometry.isChecked = config.questionTypes.contains(QuestionType.GEOMETRY)
         binding.cbNumberTheory.isChecked = config.questionTypes.contains(QuestionType.NUMBER_THEORY)
 
+        if (onApply != null) {
+            // mid-game endless run, other-mode settings are irrelevant
+            binding.tvTimedSettings.visibility = View.GONE
+            binding.tilTimeLimit.visibility = View.GONE
+            binding.tvSurvivalSettings.visibility = View.GONE
+            binding.tilLives.visibility = View.GONE
+            binding.tvExamSettings.visibility = View.GONE
+            binding.tilQuestionCount.visibility = View.GONE
+        }
+
         return AlertDialog.Builder(requireContext())
             .setTitle("Custom Difficulty")
             .setView(binding.root)
-            .setPositiveButton("Start") { _, _ ->
+            .setPositiveButton(if (onApply != null) getString(R.string.apply) else "Start") { _, _ ->
                 val basicMin = binding.etMinNumber.text.toString().toIntOrNull()
                 val basicMax = binding.etMaxNumber.text.toString().toIntOrNull()
                 val compMin = binding.etCompoundMin.text.toString().toIntOrNull()
@@ -93,7 +107,7 @@ class CustomDifficultyDialog : DialogFragment() {
                 if (binding.cbNumberTheory.isChecked) questionTypes.add(QuestionType.NUMBER_THEORY)
                 if (questionTypes.isEmpty()) questionTypes.add(QuestionType.BASIC)
 
-                GameManager.config = DifficultyConfig(
+                val newConfig = DifficultyConfig(
                     basicNumbers = basicMin..basicMax,
                     compoundNumbers = compMin..compMax,
                     smallNumbers = smallMin..smallMax,
@@ -103,8 +117,14 @@ class CustomDifficultyDialog : DialogFragment() {
                     lives = lives.coerceAtLeast(1),
                     questionCount = questionCount.coerceAtLeast(1)
                 )
-                GameManager.startGame()
-                findNavController().navigate(R.id.action_HomeFragment_to_GameFragment)
+                val handler = onApply
+                if (handler != null) {
+                    handler(newConfig)
+                } else {
+                    GameManager.config = newConfig
+                    GameManager.startGame()
+                    findNavController().navigate(R.id.action_HomeFragment_to_GameFragment)
+                }
             }
             .setNegativeButton("Cancel", null)
             .create()

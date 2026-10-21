@@ -43,6 +43,7 @@
     <string name="end_session_confirm">Are you sure you want to end this session?\nYour progress will be saved.</string>
     <string name="end">End</string>
     <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
     <string name="number_range">Number Range</string>
     <string name="min">Min</string>
     <string name="max">Max</string>
