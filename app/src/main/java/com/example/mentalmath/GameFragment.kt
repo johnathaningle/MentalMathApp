@@ -13,6 +13,9 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
     private var countDownTimer: CountDownTimer? = null
     private var isShowingFeedback = false
 
+    // named so a mid-flight difficulty change can cancel the auto-advance
+    private val advanceRunnable = Runnable { if (isAdded) showNextQuestion() }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
@@ -30,6 +33,20 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         binding.btnSubmit.setOnClickListener { handleSubmit() }
         binding.btnSkip.setOnClickListener { handleSkip() }
         binding.btnEndSession.setOnClickListener { endSession() }
+        binding.btnDifficulty.setOnClickListener {
+            if (!canChangeDifficulty()) return@setOnClickListener
+            CustomDifficultyDialog().also { dialog ->
+                dialog.onApply = { config ->
+                    if (GameManager.applyCustomConfig(config)) regenerateQuestion()
+                }
+                dialog.show(childFragmentManager, "custom_difficulty")
+            }
+        }
+    }
+
+    private fun regenerateQuestion() {
+        binding.btnSubmit.removeCallbacks(advanceRunnable)
+        showNextQuestion()
     }
 
     private fun showNextQuestion() {
@@ -122,15 +139,14 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         } else {
             binding.btnSubmit.isEnabled = true
             binding.etAnswer.isEnabled = true
-            binding.btnSubmit.postDelayed({
-                if (isAdded) showNextQuestion()
-            }, 1200)
+            binding.btnSubmit.postDelayed(advanceRunnable, 1200)
         }
     }
 
     private fun updateHUD() {
         binding.tvScore.text = getString(R.string.score_display, GameManager.score)
         binding.tvStreak.text = getString(R.string.streak_display, GameManager.streak)
+        binding.btnDifficulty.visibility = if (canChangeDifficulty()) View.VISIBLE else View.GONE
 
         when (GameManager.gameMode) {
             GameMode.TIMED -> {
@@ -172,6 +188,9 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
             }
         }
     }
+
+    // endless-only for now; widen when other modes support mid-game changes
+    private fun canChangeDifficulty() = GameManager.gameMode == GameMode.ENDLESS
 
     private fun startTimer() {
         countDownTimer?.cancel()
